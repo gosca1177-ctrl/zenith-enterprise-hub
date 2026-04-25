@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layout/AppSidebar";
+import { AppSidebar } from "@/components/ui/AppSidebar";
 import { Overview } from "@/components/dashboard/Overview";
 import { Marketplace } from "@/components/marketplace/Marketplace";
 import { RealEstate } from "@/components/real-estate/RealEstate";
