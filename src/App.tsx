@@ -1,11 +1,6 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { useState, useEffect } from "react";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/ui/AppSidebar";
+import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Overview } from "@/components/dashboard/Overview";
 import { Marketplace } from "@/components/marketplace/Marketplace";
 import { RealEstate } from "@/components/real-estate/RealEstate";
@@ -15,16 +10,14 @@ import { AIChatbot } from "@/components/ai/AIChatbot";
 import { AuthPage } from "@/components/auth/AuthPage";
 import { BusinessMarketplace } from "@/components/marketplace/BusinessMarketplace";
 import { SellerDashboard } from "@/components/dashboard/SellerDashboard";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { motion, AnimatePresence } from "motion/react";
 import { User as AppUser } from "@/types";
 import { ThemeProvider } from "next-themes";
-import * as React from "react";
-import { auth, db } from "@/lib/firebase";
-import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { supabase } from "@/lib/supabase";
+import type { User } from "@supabase/supabase-js";
 
 export default function App() {
   const [activeView, setActiveView] = useState("overview");
@@ -32,21 +25,32 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser: FirebaseUser | null) => {
-      if (firebaseUser) {
-        const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
-        if (userDoc.exists()) {
-          setUser(userDoc.data() as AppUser);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        if (profile) {
+          setUser({
+            uid: profile.id,
+            email: profile.email,
+            displayName: profile.display_name,
+            role: profile.role,
+            points: profile.points,
+            createdAt: profile.created_at,
+          });
         } else {
-           // Fallback if doc doesn't exist yet but user is authed
-           setUser({
-             uid: firebaseUser.uid,
-             email: firebaseUser.email || "",
-             displayName: firebaseUser.displayName || "",
-             role: "seller",
-             points: 0,
-             createdAt: new Date().toISOString()
-           });
+          setUser({
+            uid: session.user.id,
+            email: session.user.email || "",
+            displayName: session.user.user_metadata?.full_name || "",
+            role: "seller",
+            points: 0,
+            createdAt: new Date().toISOString(),
+          });
         }
       } else {
         setUser(null);
@@ -54,7 +58,7 @@ export default function App() {
       setIsLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => subscription.unsubscribe();
   }, []);
 
   const renderView = () => {
@@ -90,8 +94,8 @@ export default function App() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-           <div className="size-12 rounded-xl bg-primary animate-pulse" />
-           <p className="text-sm font-serif italic text-muted-foreground">Initializing Neural Link...</p>
+          <div className="size-12 rounded-xl bg-primary animate-pulse" />
+          <p className="text-sm font-serif italic text-muted-foreground">Initializing Neural Link...</p>
         </div>
       </div>
     );
@@ -99,7 +103,7 @@ export default function App() {
 
   if (!user) {
     return (
-      <ThemeProvider {...{ attribute: "class", defaultTheme: "system", enableSystem: true } as any}>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <AuthPage onAuthSuccess={() => {}} />
         <Toaster />
       </ThemeProvider>
@@ -107,7 +111,7 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider {...{ attribute: "class", defaultTheme: "system", enableSystem: true } as any}>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <SidebarProvider>
         <div className="flex min-h-screen bg-background w-full">
           <AppSidebar activeView={activeView} onViewChange={setActiveView} user={user} />
@@ -125,7 +129,7 @@ export default function App() {
                   <span className="text-xl font-serif text-emerald-500">+14.2%</span>
                 </div>
               </div>
-              
+
               <div className="flex gap-4 items-center">
                 <Breadcrumb className="mr-4 hidden lg:block">
                   <BreadcrumbList>
@@ -144,20 +148,20 @@ export default function App() {
                 </div>
               </div>
             </header>
-            
+
             <main className="flex-1 p-4 md:p-8 xl:p-12 max-w-7xl mx-auto w-full relative">
-               <AnimatePresence mode="wait">
-                 <motion.div
-                   key={activeView}
-                   initial={{ opacity: 0, y: 10 }}
-                   animate={{ opacity: 1, y: 0 }}
-                   exit={{ opacity: 0, y: -10 }}
-                   transition={{ duration: 0.2, ease: "easeOut" }}
-                 >
-                   {renderView()}
-                 </motion.div>
-               </AnimatePresence>
-               <AIChatbot />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeView}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  {renderView()}
+                </motion.div>
+              </AnimatePresence>
+              <AIChatbot />
             </main>
           </SidebarInset>
         </div>
