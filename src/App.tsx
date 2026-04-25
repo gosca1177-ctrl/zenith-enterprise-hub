@@ -116,44 +116,44 @@ export default function App() {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <SidebarProvider>
-        <div className="flex min-h-screen bg-background w-full">
-          <AppSidebar activeView={activeView} onViewChange={setActiveView} user={user} />
-          <SidebarInset className="bg-background">
-            <header className="h-20 border-b border-white/5 flex items-center justify-between px-8 bg-background/95 backdrop-blur-md sticky top-0 z-50">
-              <div className="flex gap-8 items-center">
-                <SidebarTrigger className="-ml-1" />
-                <div className="hidden sm:flex flex-col">
-                  <span className="text-[10px] uppercase tracking-widest opacity-40">Consolidated Earnings</span>
-                  <span className="text-xl font-serif">€12,482,900.00</span>
-                </div>
-                <div className="hidden sm:block h-8 w-[1px] bg-white/10"></div>
-                <div className="hidden md:flex flex-col">
-                  <span className="text-[10px] uppercase tracking-widest opacity-40">Active Yield</span>
-                  <span className="text-xl font-serif text-emerald-500">+14.2%</span>
-                </div>
+      <SidebarProvider defaultOpen={true}>
+        <AppSidebar activeView={activeView} onViewChange={setActiveView} user={user} />
+        <SidebarInset className="bg-gradient-to-br from-background via-background to-black/40">
+          <header className="h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-8 bg-background/60 backdrop-blur-xl sticky top-0 z-40 gap-4">
+            <div className="flex items-center gap-2 md:gap-6 flex-1">
+              <SidebarTrigger className="shrink-0" />
+              <div className="hidden md:flex flex-col gap-0.5">
+                <span className="text-[8px] uppercase tracking-widest opacity-40 font-bold">Total Assets</span>
+                <span className="text-lg font-serif font-bold">€1.2M</span>
               </div>
-
-              <div className="flex gap-4 items-center">
-                <Breadcrumb className="mr-4 hidden lg:block">
-                  <BreadcrumbList>
-                    <BreadcrumbItem>
-                      <BreadcrumbPage className="font-serif italic text-primary text-sm uppercase tracking-widest">{getBreadcrumb()}</BreadcrumbPage>
-                    </BreadcrumbItem>
-                  </BreadcrumbList>
-                </Breadcrumb>
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" className="rounded-full h-8 text-[9px] uppercase tracking-[0.2em] border-primary/30 text-primary hover:bg-primary/10">
-                    New Listing
-                  </Button>
-                  <Button size="sm" className="rounded-full h-8 text-[9px] font-bold uppercase tracking-[0.2em] bg-primary text-black hover:bg-primary/90">
-                    Withdraw
-                  </Button>
-                </div>
+              <div className="hidden md:block h-6 w-px bg-white/10"></div>
+              <div className="hidden lg:flex flex-col gap-0.5">
+                <span className="text-[8px] uppercase tracking-widest opacity-40 font-bold">Portfolio Yield</span>
+                <span className="text-lg font-serif text-primary font-bold">+14.2%</span>
               </div>
-            </header>
+            </div>
 
-            <main className="flex-1 p-4 md:p-8 xl:p-12 max-w-7xl mx-auto w-full relative">
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
+              <Breadcrumb className="hidden xl:block max-w-[200px]">
+                <BreadcrumbList className="flex-wrap">
+                  <BreadcrumbItem>
+                    <BreadcrumbPage className="font-serif italic text-primary text-xs uppercase tracking-tight truncate">{getBreadcrumb()}</BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+              <div className="flex gap-1.5">
+                <Button variant="outline" size="sm" className="rounded-lg h-9 text-[8px] uppercase tracking-[0.15em] border-primary/30 text-primary hover:bg-primary/10 hidden sm:inline-flex px-3">
+                  New Listing
+                </Button>
+                <Button size="sm" className="rounded-lg h-9 text-[8px] font-bold uppercase tracking-[0.15em] bg-primary text-black hover:bg-primary/90 px-3">
+                  Withdraw
+                </Button>
+              </div>
+            </div>
+          </header>
+
+          <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-auto">
+            <div className="max-w-7xl mx-auto w-full">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeView}
@@ -165,10 +165,10 @@ export default function App() {
                   {renderView()}
                 </motion.div>
               </AnimatePresence>
-              <AIChatbot />
-            </main>
-          </SidebarInset>
-        </div>
+            </div>
+          </main>
+        </SidebarInset>
+        <AIChatbot />
         <Toaster />
       </SidebarProvider>
     </ThemeProvider>

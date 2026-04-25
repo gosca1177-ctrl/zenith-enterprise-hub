@@ -29,17 +29,22 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
   };
 
   return (
-    <Sidebar variant="sidebar" collapsible="icon" className="bg-gradient-to-b from-black/40 to-black/60 border-r border-white/5">
-      <SidebarHeader className="p-0 bg-gradient-to-b from-primary/5 to-transparent border-b border-white/5">
-        <div className="p-6 space-y-1">
-          <h1 className="text-2xl font-serif italic tracking-tight text-primary font-bold">Imperium</h1>
-          <p className="text-[9px] uppercase tracking-[0.2em] opacity-40 font-bold">Enterprise Hub</p>
+    <Sidebar variant="sidebar" collapsible="icon" className="bg-black/80 border-r border-white/5 backdrop-blur-lg">
+      <SidebarHeader className="p-0 bg-gradient-to-b from-primary/10 via-primary/5 to-transparent border-b border-white/5 py-4 px-4">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center size-8 rounded-lg bg-primary/20 text-primary shrink-0">
+            <span className="font-serif italic font-bold text-sm">I</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-lg font-serif italic tracking-tight text-primary font-bold group-data-[state=collapsed]:hidden">Imperium</h1>
+            <p className="text-[7px] uppercase tracking-[0.15em] opacity-40 font-bold group-data-[state=collapsed]:hidden">Enterprise</p>
+          </div>
         </div>
       </SidebarHeader>
-      <SidebarContent className="px-2 space-y-4">
-        <SidebarGroup className="px-0">
+      <SidebarContent className="px-2 space-y-2 py-4">
+        <SidebarGroup className="px-0 space-y-1">
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu className="space-y-0.5">
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton
@@ -47,14 +52,14 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
                     onClick={() => onViewChange(item.id)}
                     tooltip={item.title}
                     className={`
-                      px-3 py-2.5 rounded-lg transition-all duration-200 font-medium text-sm
+                      px-2.5 py-2 rounded-lg transition-all duration-200 text-xs h-9
                       ${activeView === item.id
-                        ? "bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 text-primary shadow-lg shadow-primary/10"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/5 opacity-70 hover:opacity-100"}
+                        ? "bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/25 text-primary shadow-md shadow-primary/5"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/5 opacity-60 hover:opacity-100"}
                     `}
                   >
-                    <item.icon className={`size-4 ${activeView === item.id ? "text-primary" : ""}`} />
-                    <span>{item.title}</span>
+                    <item.icon className={`size-3.5 shrink-0 ${activeView === item.id ? "text-primary" : ""}`} />
+                    <span className="group-data-[state=collapsed]:hidden truncate text-xs">{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -62,10 +67,10 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="px-0 border-t border-white/5 pt-4">
-          <SidebarGroupLabel className="px-3 text-[9px] uppercase tracking-widest opacity-40 font-bold">Management</SidebarGroupLabel>
-          <SidebarGroupContent className="mt-2">
-            <SidebarMenu className="space-y-1">
+        <SidebarGroup className="px-0 border-t border-white/10 pt-2 space-y-1">
+          <SidebarGroupLabel className="px-2 text-[7px] uppercase tracking-widest opacity-40 font-bold group-data-[state=collapsed]:hidden h-6">Manage</SidebarGroupLabel>
+          <SidebarGroupContent className="mt-1">
+            <SidebarMenu className="space-y-0.5">
               {managementItems.map((item) => (
                 <SidebarMenuItem key={item.id}>
                   <SidebarMenuButton
@@ -73,14 +78,14 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
                     onClick={() => onViewChange(item.id)}
                     tooltip={item.title}
                     className={`
-                      px-3 py-2.5 rounded-lg transition-all duration-200 font-medium text-sm
+                      px-2.5 py-2 rounded-lg transition-all duration-200 text-xs h-9
                       ${activeView === item.id
-                        ? "bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 text-primary shadow-lg shadow-primary/10"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/5 opacity-70 hover:opacity-100"}
+                        ? "bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/25 text-primary shadow-md shadow-primary/5"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/5 opacity-60 hover:opacity-100"}
                     `}
                   >
-                    <item.icon className={`size-4 ${activeView === item.id ? "text-primary" : ""}`} />
-                    <span>{item.title}</span>
+                    <item.icon className={`size-3.5 shrink-0 ${activeView === item.id ? "text-primary" : ""}`} />
+                    <span className="group-data-[state=collapsed]:hidden truncate text-xs">{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -88,24 +93,24 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-white/5 bg-gradient-to-t from-black/40 to-transparent p-4">
-        <div className="space-y-3">
-          <div className="flex items-center gap-3 px-1">
-            <Avatar className="h-10 w-10 border border-primary/30 shadow-lg shadow-primary/10">
-              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-black font-bold text-sm">
+      <SidebarFooter className="border-t border-white/10 bg-gradient-to-t from-black/60 to-transparent p-3">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2.5 px-1">
+            <Avatar className="h-8 w-8 border border-primary/30 shrink-0 shadow-lg shadow-primary/10">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-black font-bold text-xs">
                 {user?.displayName?.charAt(0) || user?.email?.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-1 flex-col truncate">
-              <p className="truncate text-xs font-bold">{user?.displayName || "User"}</p>
-              <p className="truncate text-[9px] text-primary uppercase tracking-wider font-bold opacity-80">{user?.role || "Platinum"}</p>
+            <div className="flex flex-1 flex-col truncate min-w-0 group-data-[state=collapsed]:hidden">
+              <p className="truncate text-xs font-bold leading-tight">{user?.displayName || "User"}</p>
+              <p className="truncate text-[7px] text-primary uppercase tracking-wider font-bold opacity-80">{user?.role || "Platinum"}</p>
             </div>
-            <Button variant="ghost" size="icon" className="size-8 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" onClick={handleSignOut}>
-              <LogOut className="size-4" />
+            <Button variant="ghost" size="icon" className="size-7 shrink-0 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" onClick={handleSignOut}>
+              <LogOut className="size-3.5" />
             </Button>
           </div>
-          <div className="h-px bg-gradient-to-r from-white/5 via-primary/10 to-white/5" />
-          <p className="text-[8px] text-muted-foreground/50 uppercase tracking-[0.15em] font-bold px-1">v1.0 • Enterprise</p>
+          <div className="h-px bg-gradient-to-r from-white/5 via-primary/10 to-white/5 group-data-[state=collapsed]:hidden" />
+          <p className="text-[6px] text-muted-foreground/50 uppercase tracking-[0.1em] font-bold px-1 group-data-[state=collapsed]:hidden">v1.0 Enterprise</p>
         </div>
       </SidebarFooter>
     </Sidebar>
