@@ -1,89 +1,105 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell } from "recharts";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell, LineChart, Line, Area, AreaChart } from "recharts";
 import { motion } from "motion/react";
+import { TrendingUp, TrendingDown, DollarSign, ArrowUpRight, ArrowDownRight, Zap, Activity, Target } from "lucide-react";
 
-const data = [
-  { name: "Jan", total: 3200 },
-  { name: "Feb", total: 4100 },
-  { name: "Mar", total: 2800 },
-  { name: "Apr", total: 5400 },
-  { name: "May", total: 3900 },
-  { name: "Jun", total: 4800 },
+const revenueData = [
+  { name: "Jan", value: 3200, target: 4000 },
+  { name: "Feb", value: 4100, target: 4000 },
+  { name: "Mar", value: 2800, target: 4000 },
+  { name: "Apr", value: 5400, target: 4000 },
+  { name: "May", value: 3900, target: 4000 },
+  { name: "Jun", value: 4800, target: 4000 },
 ];
+
+const performanceData = [
+  { name: "Week 1", performance: 72 },
+  { name: "Week 2", performance: 85 },
+  { name: "Week 3", performance: 78 },
+  { name: "Week 4", performance: 92 },
+];
+
+const StatCard = ({ icon: Icon, label, value, change, positive }: any) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className="group"
+  >
+    <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 hover:border-primary/30 transition-all overflow-hidden">
+      <CardContent className="p-6 space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="p-2.5 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+            <Icon className="size-5 text-primary" />
+          </div>
+          <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5 text-[9px] uppercase font-bold tracking-tight gap-1">
+            {positive ? <ArrowUpRight className="size-2.5" /> : <ArrowDownRight className="size-2.5" />}
+            {change}%
+          </Badge>
+        </div>
+        <div>
+          <p className="text-[10px] uppercase tracking-widest opacity-60 font-semibold">{label}</p>
+          <p className="text-2xl font-bold font-mono mt-1">{value}</p>
+        </div>
+      </CardContent>
+    </Card>
+  </motion.div>
+);
 
 export function Overview() {
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      <div className="grid grid-cols-12 gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="col-span-12 lg:col-span-8"
-        >
-          <Card className="h-full bg-card border-white/5 rounded-2xl p-8 transition-all hover:border-primary/20">
-            <div className="flex justify-between items-end mb-8">
-              <div>
-                <h3 className="text-xl font-serif text-foreground">Market Performance Analysis</h3>
-                <p className="text-xs opacity-40 font-sans mt-1">Real-time data synchronization across all digital & physical assets</p>
-              </div>
-              <div className="flex gap-2">
-                <span className="w-3 h-3 rounded-full bg-primary animate-pulse"></span>
-                <span className="w-3 h-3 rounded-full bg-white/10"></span>
-              </div>
-            </div>
+    <div className="space-y-8 pb-12">
+      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-2">
+        <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
+        <p className="text-muted-foreground font-serif italic">Real-time enterprise metrics and portfolio analysis</p>
+      </motion.div>
 
-            <div className="h-[300px] w-full mt-12">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data}>
-                  <XAxis dataKey="name" fontSize={10} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    cursor={{ fill: 'rgba(212, 175, 55, 0.1)' }}
-                    contentStyle={{ backgroundColor: '#161618', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', fontSize: '12px', color: '#E5E5E5' }}
-                  />
-                  <Bar dataKey="total" fill="#D4AF37" radius={[4, 4, 0, 0]} barSize={48}>
-                    {data.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={index === data.length - 1 ? "#D4AF37" : "rgba(255,255,255,0.05)"} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="flex justify-between mt-4 text-[10px] uppercase tracking-widest opacity-30 px-2 font-bold">
-              {data.map(d => <span key={d.name}>{d.name}</span>)}
-            </div>
-          </Card>
-        </motion.div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={DollarSign} label="Total Assets" value="€1.2M" change="12.5" positive />
+        <StatCard icon={TrendingUp} label="Monthly Revenue" value="€84.2K" change="8.3" positive />
+        <StatCard icon={Activity} label="Active Transactions" value="247" change="3.1" positive />
+        <StatCard icon={Zap} label="Portfolio Yield" value="14.2%" change="2.4" positive />
+      </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="col-span-12 lg:col-span-4"
+          className="lg:col-span-2"
         >
-          <Card className="h-full bg-card border-white/5 rounded-2xl p-6 transition-all hover:border-primary/20">
-            <h3 className="text-[10px] uppercase tracking-[0.2em] mb-6 border-b border-white/5 pb-3 opacity-60 font-bold">Secure Escrow</h3>
-            <div className="space-y-4">
-              {[
-                { name: "Villa Grand Azure", price: "€2.4M", progress: 75, status: "Document Verification" },
-                { name: "Neural Engine SDK", price: "€12,500", progress: 100, status: "Funds Released" },
-                { name: "Prime Retail Lot B", price: "€450k", progress: 30, status: "Due Diligence" },
-              ].map((item, i) => (
-                <div key={i} className="p-4 rounded-xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-colors">
-                  <div className="flex justify-between mb-3 text-sm">
-                    <span className="font-serif italic text-foreground tracking-wide">{item.name}</span>
-                    <span className="text-primary font-mono font-bold">{item.price}</span>
-                  </div>
-                  <div className="w-full bg-black/40 h-1.5 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${item.progress}%` }}
-                      className="h-full rounded-full bg-primary"
-                    />
-                  </div>
-                  <p className="text-[9px] mt-3 opacity-40 uppercase font-bold tracking-[0.1em]">Status: {item.status}</p>
+          <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 overflow-hidden">
+            <CardHeader className="border-b border-white/5 pb-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg font-serif">Revenue Analysis</CardTitle>
+                  <CardDescription className="text-[10px] uppercase tracking-widest opacity-50 mt-1">Monthly performance vs target</CardDescription>
                 </div>
-              ))}
-            </div>
+                <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5">6M</Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={revenueData}>
+                    <defs>
+                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#D4AF37" stopOpacity={0.8} />
+                        <stop offset="100%" stopColor="#D4AF37" stopOpacity={0.2} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="name" fontSize={11} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} />
+                    <YAxis fontSize={11} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} />
+                    <Tooltip
+                      cursor={{ fill: 'rgba(212, 175, 55, 0.1)' }}
+                      contentStyle={{ backgroundColor: 'rgba(20, 20, 20, 0.8)', borderRadius: '8px', border: '1px solid rgba(212, 175, 55, 0.3)', fontSize: '12px' }}
+                    />
+                    <Bar dataKey="value" fill="url(#barGradient)" radius={[6, 6, 0, 0]} barSize={32} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
           </Card>
         </motion.div>
 
@@ -91,29 +107,68 @@ export function Overview() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="col-span-12 md:col-span-3"
         >
-          <Card className="bg-card border-white/5 rounded-2xl p-6 transition-all hover:border-primary/20 bg-gradient-to-br from-card to-white/[0.02]">
-            <p className="text-[10px] uppercase tracking-widest opacity-40 mb-3 font-bold">Lead Conversion</p>
-            <p className="text-4xl font-serif tracking-tight">82<span className="text-sm text-primary ml-1">%</span></p>
-            <p className="text-[10px] text-emerald-400 mt-4 flex items-center gap-1 font-bold">↑ 4.1% AI OPTIMIZED</p>
+          <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 h-full">
+            <CardHeader className="border-b border-white/5 pb-4">
+              <CardTitle className="text-lg font-serif">Portfolio Snapshot</CardTitle>
+              <CardDescription className="text-[10px] uppercase tracking-widest opacity-50 mt-1">Current distribution</CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              {[
+                { label: "Real Estate", value: "42%", color: "from-blue-500" },
+                { label: "Digital Assets", value: "28%", color: "from-primary" },
+                { label: "Securities", value: "18%", color: "from-emerald-500" },
+                { label: "Cash Reserve", value: "12%", color: "from-gray-500" },
+              ].map((item, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="font-medium">{item.label}</span>
+                    <span className="text-primary font-mono">{item.value}</span>
+                  </div>
+                  <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: item.value }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                      className={`h-full rounded-full bg-gradient-to-r ${item.color} to-transparent`}
+                    />
+                  </div>
+                </div>
+              ))}
+            </CardContent>
           </Card>
         </motion.div>
+      </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="col-span-12 md:col-span-6"
         >
-          <Card className="bg-card border-white/5 rounded-2xl p-6 flex items-center justify-between group transition-all hover:border-primary/20">
-            <div className="space-y-1.5">
-              <p className="text-[10px] uppercase tracking-widest opacity-40 font-bold">Market Insights</p>
-              <p className="text-lg italic font-serif leading-relaxed text-foreground/90 pr-4">"Prime residential demand in Global tech hubs exceeds supply by 22%."</p>
-            </div>
-            <div className="shrink-0 w-20 h-20 rounded-full border border-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform bg-primary/5">
-              <span className="text-[11px] text-primary font-bold tracking-tighter">AI AGENT</span>
-            </div>
+          <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10">
+            <CardHeader className="border-b border-white/5 pb-4">
+              <CardTitle className="text-lg font-serif">Performance Trend</CardTitle>
+              <CardDescription className="text-[10px] uppercase tracking-widest opacity-50 mt-1">4-week progress</CardDescription>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="h-[250px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={performanceData}>
+                    <defs>
+                      <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#D4AF37" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="#D4AF37" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="name" fontSize={11} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} />
+                    <YAxis fontSize={11} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} domain={[0, 100]} />
+                    <Tooltip contentStyle={{ backgroundColor: 'rgba(20, 20, 20, 0.8)', borderRadius: '8px', border: '1px solid rgba(212, 175, 55, 0.3)' }} />
+                    <Area type="monotone" dataKey="performance" stroke="#D4AF37" strokeWidth={2} fill="url(#lineGradient)" />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
           </Card>
         </motion.div>
 
@@ -121,18 +176,55 @@ export function Overview() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="col-span-12 md:col-span-3"
         >
-          <Card className="bg-card border-white/5 rounded-2xl p-6 transition-all hover:border-primary/20 border-l-primary/30 border-l-2">
-            <p className="text-[10px] uppercase tracking-widest opacity-40 mb-3 font-bold">Reward Points</p>
-            <p className="text-4xl font-serif tracking-tighter">4,500 <span className="text-xs uppercase opacity-40">pts</span></p>
-            <p className="text-[10px] opacity-40 mt-4 flex items-center gap-2 uppercase tracking-widest font-bold">
-              <span className="size-2 rounded-full bg-primary" />
-              Silver Tier Milestone
-            </p>
+          <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10">
+            <CardHeader className="border-b border-white/5 pb-4">
+              <CardTitle className="text-lg font-serif">Recent Activity</CardTitle>
+              <CardDescription className="text-[10px] uppercase tracking-widest opacity-50 mt-1">Latest transactions</CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 space-y-3">
+              {[
+                { type: "Listing", title: "Premium Tech Stack", amount: "€12,500", time: "2h ago", status: "completed" },
+                { type: "Purchase", title: "Berlin Penthouse", amount: "€1.2M", time: "1d ago", status: "escrow" },
+                { type: "Dividend", title: "Q2 Distribution", amount: "€8,400", time: "3d ago", status: "completed" },
+                { type: "Inquiry", title: "Sustainable Eco-Villa", amount: "€890K", time: "5d ago", status: "pending" },
+              ].map((activity, i) => (
+                <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/5 group cursor-pointer">
+                  <div className="flex-1">
+                    <p className="text-sm font-medium group-hover:text-primary transition-colors">{activity.title}</p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold mt-0.5">{activity.type}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-mono font-bold text-primary">{activity.amount}</p>
+                    <Badge variant="outline" className="text-[8px] uppercase tracking-tighter mt-1 border-primary/20 text-primary/70 bg-primary/5 h-5 px-1.5">
+                      {activity.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
           </Card>
         </motion.div>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 overflow-hidden relative">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+          <CardContent className="p-8 relative z-10 flex items-center justify-between">
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold">Unlock Premium Features</h3>
+              <p className="text-sm text-muted-foreground">Upgrade to unlock advanced analytics, AI insights, and priority support.</p>
+            </div>
+            <Button className="gap-2 bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.1em] text-xs px-6 h-11 rounded-lg shrink-0">
+              Explore Pro <ArrowUpRight className="size-3" />
+            </Button>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }

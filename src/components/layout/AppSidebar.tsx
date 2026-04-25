@@ -29,15 +29,15 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
   };
 
   return (
-    <Sidebar variant="sidebar" collapsible="icon">
-      <SidebarHeader className="p-0">
-        <div className="p-8">
-          <h1 className="text-2xl font-serif italic tracking-tight text-primary">Imperium</h1>
-          <p className="text-[10px] uppercase tracking-[0.2em] opacity-40 mt-1">Global Asset Management</p>
+    <Sidebar variant="sidebar" collapsible="icon" className="bg-gradient-to-b from-black/40 to-black/60 border-r border-white/5">
+      <SidebarHeader className="p-0 bg-gradient-to-b from-primary/5 to-transparent border-b border-white/5">
+        <div className="p-6 space-y-1">
+          <h1 className="text-2xl font-serif italic tracking-tight text-primary font-bold">Imperium</h1>
+          <p className="text-[9px] uppercase tracking-[0.2em] opacity-40 font-bold">Enterprise Hub</p>
         </div>
       </SidebarHeader>
-      <SidebarContent className="px-2">
-        <SidebarGroup>
+      <SidebarContent className="px-2 space-y-4">
+        <SidebarGroup className="px-0">
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {navItems.map((item) => (
@@ -47,12 +47,14 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
                     onClick={() => onViewChange(item.id)}
                     tooltip={item.title}
                     className={`
-                      px-4 py-6 rounded-lg transition-all duration-200
-                      ${activeView === item.id ? "bg-white/5 border border-white/10 text-primary" : "opacity-50 hover:opacity-100 hover:bg-white/5"}
+                      px-3 py-2.5 rounded-lg transition-all duration-200 font-medium text-sm
+                      ${activeView === item.id
+                        ? "bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 text-primary shadow-lg shadow-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/5 opacity-70 hover:opacity-100"}
                     `}
                   >
                     <item.icon className={`size-4 ${activeView === item.id ? "text-primary" : ""}`} />
-                    <span className="text-sm font-medium">{item.title}</span>
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -60,9 +62,9 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel className="px-4 text-[10px] uppercase tracking-widest opacity-30">Management</SidebarGroupLabel>
-          <SidebarGroupContent>
+        <SidebarGroup className="px-0 border-t border-white/5 pt-4">
+          <SidebarGroupLabel className="px-3 text-[9px] uppercase tracking-widest opacity-40 font-bold">Management</SidebarGroupLabel>
+          <SidebarGroupContent className="mt-2">
             <SidebarMenu className="space-y-1">
               {managementItems.map((item) => (
                 <SidebarMenuItem key={item.id}>
@@ -71,12 +73,14 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
                     onClick={() => onViewChange(item.id)}
                     tooltip={item.title}
                     className={`
-                      px-4 py-6 rounded-lg transition-all duration-200
-                      ${activeView === item.id ? "bg-white/5 border border-white/10 text-primary" : "opacity-50 hover:opacity-100 hover:bg-white/5"}
+                      px-3 py-2.5 rounded-lg transition-all duration-200 font-medium text-sm
+                      ${activeView === item.id
+                        ? "bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 text-primary shadow-lg shadow-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/5 opacity-70 hover:opacity-100"}
                     `}
                   >
                     <item.icon className={`size-4 ${activeView === item.id ? "text-primary" : ""}`} />
-                    <span className="text-sm">{item.title}</span>
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -84,20 +88,24 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="border-t border-white/5 p-6">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10 border-0">
-            <AvatarFallback className="bg-gradient-to-tr from-primary to-[#8E6D21] text-black font-bold">
-              {user?.displayName?.charAt(0) || user?.email?.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-1 flex-col truncate">
-            <p className="truncate text-sm font-medium">{user?.displayName || "User"}</p>
-            <p className="truncate text-[10px] text-primary uppercase tracking-wider font-bold">{user?.role || "Platinum Member"}</p>
+      <SidebarFooter className="border-t border-white/5 bg-gradient-to-t from-black/40 to-transparent p-4">
+        <div className="space-y-3">
+          <div className="flex items-center gap-3 px-1">
+            <Avatar className="h-10 w-10 border border-primary/30 shadow-lg shadow-primary/10">
+              <AvatarFallback className="bg-gradient-to-br from-primary to-primary/60 text-black font-bold text-sm">
+                {user?.displayName?.charAt(0) || user?.email?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-1 flex-col truncate">
+              <p className="truncate text-xs font-bold">{user?.displayName || "User"}</p>
+              <p className="truncate text-[9px] text-primary uppercase tracking-wider font-bold opacity-80">{user?.role || "Platinum"}</p>
+            </div>
+            <Button variant="ghost" size="icon" className="size-8 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all" onClick={handleSignOut}>
+              <LogOut className="size-4" />
+            </Button>
           </div>
-          <Button variant="ghost" size="icon" className="size-8 hover:bg-white/5 text-muted-foreground hover:text-primary" onClick={handleSignOut}>
-            <LogOut className="size-4" />
-          </Button>
+          <div className="h-px bg-gradient-to-r from-white/5 via-primary/10 to-white/5" />
+          <p className="text-[8px] text-muted-foreground/50 uppercase tracking-[0.15em] font-bold px-1">v1.0 • Enterprise</p>
         </div>
       </SidebarFooter>
     </Sidebar>
