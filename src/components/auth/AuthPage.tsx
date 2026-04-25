@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { User, Mail, Lock, ShieldCheck, CheckCircle2, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, ShieldCheck, CircleCheck as CheckCircle2, ArrowRight } from "lucide-react";
 import { motion } from "motion/react";
 
 export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
