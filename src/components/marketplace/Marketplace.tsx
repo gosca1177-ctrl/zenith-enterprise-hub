@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, ShoppingCart, Tag, Star, LayoutGrid, List, BarChart3 } from "lucide-react";
+import { Search, ShoppingCart, Tag, Star, LayoutGrid, List, ChartBar as BarChart3 } from "lucide-react";
 import { motion } from "motion/react";
 
 const products = [

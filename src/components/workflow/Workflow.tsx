@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "motion/react";
-import { CheckCircle2, Circle, Clock, Plus, Trophy, Zap } from "lucide-react";
+import { CircleCheck as CheckCircle2, Circle, Clock, Plus, Trophy, Zap } from "lucide-react";
 
 const sampleTasks = [
   { id: "1", title: "Review Q2 Financial Reports", status: "completed", points: 50, assignee: "You" },

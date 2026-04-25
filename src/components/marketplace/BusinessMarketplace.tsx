@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
-import { Building2, TrendingUp, PieChart, MessageSquare, Search } from "lucide-react";
+import { Building2, TrendingUp, ChartPie as PieChart, MessageSquare, Search } from "lucide-react";
 
 export function BusinessMarketplace() {
   const [listings, setListings] = useState<BusinessListing[]>([]);

@@ -1,4 +1,4 @@
-import { Home, ShoppingBag, Building2, Workflow, BarChart3, Settings, Users, LogOut, Briefcase, Store } from "lucide-react";
+import { Hop as Home, ShoppingBag, Building2, Workflow, ChartBar as BarChart3, Settings, Users, LogOut, Briefcase, Store } from "lucide-react";
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
