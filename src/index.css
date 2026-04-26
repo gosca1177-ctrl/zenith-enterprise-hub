@@ -102,14 +102,14 @@
 }
 
 @layer base {
+  html, body, #root {
+    @apply h-full w-full;
+  }
   html {
-    @apply font-sans h-screen overflow-hidden;
+    @apply font-sans;
   }
   body {
-    @apply bg-background text-foreground m-0 p-0 h-screen overflow-hidden;
-  }
-  #root {
-    @apply w-full h-full;
+    @apply bg-background text-foreground m-0 p-0 overflow-hidden;
   }
   * {
     @apply border-border outline-ring/50;
