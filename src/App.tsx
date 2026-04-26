@@ -116,58 +116,62 @@ export default function App() {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <SidebarProvider defaultOpen={true}>
-        <AppSidebar activeView={activeView} onViewChange={setActiveView} user={user} />
-        <SidebarInset className="bg-gradient-to-br from-background via-background to-black/40">
-          <header className="h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-8 bg-background/60 backdrop-blur-xl sticky top-0 z-40 gap-4">
-            <div className="flex items-center gap-2 md:gap-6 flex-1">
-              <SidebarTrigger className="shrink-0" />
-              <div className="hidden md:flex flex-col gap-0.5">
-                <span className="text-[8px] uppercase tracking-widest opacity-40 font-bold">Total Assets</span>
-                <span className="text-lg font-serif font-bold">€1.2M</span>
+      <SidebarProvider>
+        <div className="flex w-full min-h-screen bg-gradient-to-br from-background via-background to-black/40">
+          <AppSidebar activeView={activeView} onViewChange={setActiveView} user={user} />
+          <div className="flex-1 flex flex-col w-full overflow-hidden">
+            <header className="h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-8 bg-background/80 backdrop-blur-xl sticky top-0 z-40 shrink-0">
+              <div className="flex items-center gap-2 md:gap-6 flex-1 min-w-0">
+                <SidebarTrigger className="shrink-0" />
+                <div className="hidden md:flex flex-col gap-0.5">
+                  <span className="text-[8px] uppercase tracking-widest opacity-40 font-bold">Total Assets</span>
+                  <span className="text-lg font-serif font-bold">€1.2M</span>
+                </div>
+                <div className="hidden md:block h-6 w-px bg-white/10"></div>
+                <div className="hidden lg:flex flex-col gap-0.5">
+                  <span className="text-[8px] uppercase tracking-widest opacity-40 font-bold">Portfolio Yield</span>
+                  <span className="text-lg font-serif text-primary font-bold">+14.2%</span>
+                </div>
               </div>
-              <div className="hidden md:block h-6 w-px bg-white/10"></div>
-              <div className="hidden lg:flex flex-col gap-0.5">
-                <span className="text-[8px] uppercase tracking-widest opacity-40 font-bold">Portfolio Yield</span>
-                <span className="text-lg font-serif text-primary font-bold">+14.2%</span>
-              </div>
-            </div>
 
-            <div className="flex items-center gap-2 md:gap-3 shrink-0">
-              <Breadcrumb className="hidden xl:block max-w-[200px]">
-                <BreadcrumbList className="flex-wrap">
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="font-serif italic text-primary text-xs uppercase tracking-tight truncate">{getBreadcrumb()}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-              <div className="flex gap-1.5">
-                <Button variant="outline" size="sm" className="rounded-lg h-9 text-[8px] uppercase tracking-[0.15em] border-primary/30 text-primary hover:bg-primary/10 hidden sm:inline-flex px-3">
-                  New Listing
-                </Button>
-                <Button size="sm" className="rounded-lg h-9 text-[8px] font-bold uppercase tracking-[0.15em] bg-primary text-black hover:bg-primary/90 px-3">
-                  Withdraw
-                </Button>
+              <div className="flex items-center gap-2 md:gap-3 shrink-0">
+                <Breadcrumb className="hidden xl:block max-w-[200px]">
+                  <BreadcrumbList className="flex-wrap">
+                    <BreadcrumbItem>
+                      <BreadcrumbPage className="font-serif italic text-primary text-xs uppercase tracking-tight truncate">{getBreadcrumb()}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </BreadcrumbList>
+                </Breadcrumb>
+                <div className="flex gap-1.5">
+                  <Button variant="outline" size="sm" className="rounded-lg h-9 text-[8px] uppercase tracking-[0.15em] border-primary/30 text-primary hover:bg-primary/10 hidden sm:inline-flex px-3">
+                    New Listing
+                  </Button>
+                  <Button size="sm" className="rounded-lg h-9 text-[8px] font-bold uppercase tracking-[0.15em] bg-primary text-black hover:bg-primary/90 px-3">
+                    Withdraw
+                  </Button>
+                </div>
               </div>
-            </div>
-          </header>
+            </header>
 
-          <main className="flex-1 p-3 md:p-6 lg:p-8 overflow-auto">
-            <div className="max-w-7xl mx-auto w-full">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeView}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                >
-                  {renderView()}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </main>
-        </SidebarInset>
+            <main className="flex-1 overflow-auto">
+              <div className="p-4 md:p-8 lg:p-12">
+                <div className="max-w-7xl mx-auto w-full">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={activeView}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.2, ease: "easeOut" }}
+                    >
+                      {renderView()}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
         <AIChatbot />
         <Toaster />
       </SidebarProvider>
