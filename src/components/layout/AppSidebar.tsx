@@ -29,7 +29,7 @@ export function AppSidebar({ activeView, onViewChange, user }: { activeView: str
   };
 
   return (
-    <Sidebar variant="sidebar" collapsible="icon" className="bg-black/80 border-r border-white/5 backdrop-blur-lg" style={{ width: '15rem' }}>
+    <Sidebar variant="sidebar" collapsible="icon" className="bg-black/80 border-r border-white/5 backdrop-blur-lg">
       <SidebarHeader className="bg-gradient-to-b from-primary/10 via-primary/5 to-transparent border-b border-white/5 py-4 px-4">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center size-8 rounded-lg bg-primary/20 text-primary shrink-0">
