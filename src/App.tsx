@@ -116,10 +116,10 @@ export default function App() {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <SidebarProvider>
+      <SidebarProvider defaultOpen={true}>
         <AppSidebar activeView={activeView} onViewChange={setActiveView} user={user} />
-        <SidebarInset>
-          <header className="h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-8 bg-background/80 backdrop-blur-xl sticky top-0 z-40 gap-4">
+        <SidebarInset className="flex flex-col h-screen bg-gradient-to-br from-background via-background to-black/40">
+          <header className="h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-8 bg-background/80 backdrop-blur-xl sticky top-0 z-40 gap-4 flex-shrink-0">
             <div className="flex items-center gap-2 md:gap-6 flex-1 min-w-0">
               <SidebarTrigger className="shrink-0" />
               <div className="hidden md:flex flex-col gap-0.5">
@@ -152,8 +152,8 @@ export default function App() {
             </div>
           </header>
 
-          <main className="flex-1 overflow-auto">
-            <div className="p-4 md:p-8 lg:p-12">
+          <main className="flex-1 overflow-y-auto overflow-x-hidden">
+            <div className="p-4 md:p-8 lg:p-12 h-full">
               <div className="max-w-7xl mx-auto w-full">
                 <AnimatePresence mode="wait">
                   <motion.div
