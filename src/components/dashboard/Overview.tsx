@@ -1,9 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell, LineChart, Line, Area, AreaChart } from "recharts";
 import { motion } from "motion/react";
-import { TrendingUp, TrendingDown, DollarSign, ArrowUpRight, ArrowDownRight, Zap, Activity, Target } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, ArrowUpRight, ArrowDownRight, Zap, Activity, Target, Plus, Clock, CircleCheck as CheckCircle2, CircleAlert as AlertCircle } from "lucide-react";
 
 const revenueData = [
   { name: "Jan", value: 3200, target: 4000 },
@@ -140,12 +141,12 @@ export function Overview() {
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="overflow-hidden"
+          className="lg:col-span-2 overflow-hidden"
         >
           <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 h-full">
             <CardHeader className="border-b border-white/5 pb-3">
@@ -179,31 +180,20 @@ export function Overview() {
           transition={{ delay: 0.4 }}
           className="overflow-hidden"
         >
-          <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 h-full">
-            <CardHeader className="border-b border-white/5 pb-3">
-              <CardTitle className="text-sm md:text-lg font-serif">Recent Activity</CardTitle>
-              <CardDescription className="text-[8px] md:text-[10px] uppercase tracking-widest opacity-50 mt-1">Latest transactions</CardDescription>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-2">
-              {[
-                { type: "Listing", title: "Premium Tech Stack", amount: "€12,500", time: "2h ago", status: "completed" },
-                { type: "Purchase", title: "Berlin Penthouse", amount: "€1.2M", time: "1d ago", status: "escrow" },
-                { type: "Dividend", title: "Q2 Distribution", amount: "€8,400", time: "3d ago", status: "completed" },
-              ].map((activity, i) => (
-                <div key={i} className="flex items-start justify-between gap-2 p-2.5 sm:p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors border border-white/5 group cursor-pointer">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-sm font-medium group-hover:text-primary transition-colors truncate">{activity.title}</p>
-                    <p className="text-[7px] sm:text-[10px] text-muted-foreground uppercase tracking-wider font-bold mt-0.5">{activity.type}</p>
-                  </div>
-                  <div className="text-right shrink-0 text-right">
-                    <p className="text-xs sm:text-sm font-mono font-bold text-primary">{activity.amount}</p>
-                    <Badge variant="outline" className="text-[6px] sm:text-[8px] uppercase tracking-tighter mt-1 border-primary/20 text-primary/70 bg-primary/5 h-4 px-1">
-                      {activity.status}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
+          <Card className="bg-gradient-to-br from-primary/20 to-primary/5 border-primary/30 h-full flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden group cursor-pointer hover:border-primary/50 transition-all">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10 text-center space-y-3 flex flex-col items-center">
+              <div className="p-3 rounded-xl bg-primary/20 group-hover:bg-primary/30 transition-colors">
+                <Plus className="size-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold font-serif">Start New Deal</h3>
+                <p className="text-xs text-muted-foreground mt-1">Create a new transaction or listing</p>
+              </div>
+              <Button className="gap-2 bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.1em] text-xs px-4 h-9 mt-2">
+                Get Started <ArrowUpRight className="size-3" />
+              </Button>
+            </div>
           </Card>
         </motion.div>
       </div>
@@ -212,17 +202,79 @@ export function Overview() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
+        className="overflow-hidden"
       >
-        <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20 overflow-hidden relative">
-          <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-          <CardContent className="p-4 sm:p-6 relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="space-y-1 flex-1">
-              <h3 className="text-lg sm:text-2xl font-bold">Unlock Premium Features</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">Upgrade to unlock advanced analytics, AI insights, and priority support.</p>
+        <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10">
+          <CardHeader className="border-b border-white/5 pb-3 md:pb-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <CardTitle className="text-sm md:text-lg font-serif">Recent Transactions</CardTitle>
+                <CardDescription className="text-[8px] md:text-[10px] uppercase tracking-widest opacity-50 mt-1">Your latest activity</CardDescription>
+              </div>
+              <Button variant="outline" size="sm" className="text-xs border-primary/30 text-primary hover:bg-primary/10">
+                View All
+              </Button>
             </div>
-            <Button className="gap-2 bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.1em] text-xs px-4 sm:px-6 h-9 sm:h-11 rounded-lg shrink-0">
-              Explore Pro <ArrowUpRight className="size-3" />
-            </Button>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6">
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-white/10 hover:bg-transparent">
+                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Transaction</TableHead>
+                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Type</TableHead>
+                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Amount</TableHead>
+                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Date</TableHead>
+                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground text-right">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {[
+                    { id: 1, title: "Premium Tech Stack", type: "Listing", amount: "€12,500", date: "2h ago", status: "completed", icon: CheckCircle2 },
+                    { id: 2, title: "Berlin Penthouse", type: "Purchase", amount: "€1.2M", date: "1d ago", status: "escrow", icon: Clock },
+                    { id: 3, title: "Q2 Distribution", type: "Dividend", amount: "€8,400", date: "3d ago", status: "completed", icon: CheckCircle2 },
+                    { id: 4, title: "Smart Contract Deploy", type: "Transfer", amount: "€5,200", date: "5d ago", status: "pending", icon: AlertCircle },
+                    { id: 5, title: "Portfolio Rebalance", type: "Adjustment", amount: "€45,000", date: "1w ago", status: "completed", icon: CheckCircle2 },
+                  ].map((transaction) => {
+                    const StatusIcon = transaction.icon;
+                    return (
+                      <TableRow key={transaction.id} className="border-white/5 hover:bg-white/5 transition-colors group cursor-pointer">
+                        <TableCell className="text-xs sm:text-sm font-medium group-hover:text-primary transition-colors">
+                          {transaction.title}
+                        </TableCell>
+                        <TableCell className="text-xs text-muted-foreground">
+                          <Badge variant="outline" className="border-white/10 bg-white/5 text-xs">
+                            {transaction.type}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-xs sm:text-sm font-mono font-bold text-primary">
+                          {transaction.amount}
+                        </TableCell>
+                        <TableCell className="text-xs text-muted-foreground">
+                          {transaction.date}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <StatusIcon className={`size-3 ${
+                              transaction.status === "completed" ? "text-emerald-500" :
+                              transaction.status === "escrow" ? "text-blue-500" :
+                              "text-yellow-500"
+                            }`} />
+                            <Badge variant="outline" className={`text-[7px] uppercase tracking-tighter ${
+                              transaction.status === "completed" ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" :
+                              transaction.status === "escrow" ? "border-blue-500/30 text-blue-400 bg-blue-500/10" :
+                              "border-yellow-500/30 text-yellow-400 bg-yellow-500/10"
+                            }`}>
+                              {transaction.status}
+                            </Badge>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
