@@ -87,7 +87,7 @@ export function AIChatbot() {
                   <BrainCircuit className="size-5" />
                   <CardTitle className="text-lg">Zenith AI</CardTitle>
                 </div>
-                <Badge variant="secondary" className="text-[9px] uppercase tracking-tighter bg-white/20 border-none text-white font-bold">Live Engine</Badge>
+                <Badge variant="secondary" className="text-[9px] uppercase tracking-tighter bg-muted/50 border-none text-muted-foreground font-bold">Live Engine</Badge>
               </CardHeader>
               <CardContent className="p-0">
                 <ScrollArea className="h-[400px] p-4" ref={scrollRef}>

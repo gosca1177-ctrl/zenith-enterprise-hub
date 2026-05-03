@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, Area, AreaChart } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Area, AreaChart } from "recharts";
 import { motion } from "motion/react";
 import { TrendingUp, DollarSign, ArrowUpRight, ArrowDownRight, Activity, Zap, CircleCheck as CheckCircle2, Clock, CircleAlert as AlertCircle, Plus } from "lucide-react";
 
@@ -28,19 +28,19 @@ const StatCard = ({ icon: Icon, label, value, change, trend }: any) => (
     animate={{ opacity: 1, y: 0 }}
     className="h-full"
   >
-    <Card className="bg-slate-800 border-slate-700 hover:border-slate-600 hover:bg-slate-800/80 transition-all h-full">
+    <Card className="h-full transition-colors hover:border-primary/30">
       <CardContent className="p-6">
         <div className="flex items-start justify-between mb-4">
-          <div className="p-3 bg-blue-600/20 rounded-lg">
-            <Icon className="w-5 h-5 text-blue-500" />
+          <div className="p-3 bg-primary/10 rounded-lg">
+            <Icon className="w-5 h-5 text-primary" />
           </div>
-          <Badge className={`gap-1 ${trend === 'up' ? 'bg-emerald-600/20 text-emerald-400' : 'bg-red-600/20 text-red-400'}`}>
+          <Badge className={`gap-1 ${trend === 'up' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' : 'bg-red-500/15 text-red-400 border-red-500/20'}`}>
             {trend === 'up' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
             {change}%
           </Badge>
         </div>
-        <p className="text-sm text-slate-400 mb-1">{label}</p>
-        <p className="text-3xl font-bold text-white">{value}</p>
+        <p className="text-sm text-muted-foreground mb-1">{label}</p>
+        <p className="text-3xl font-bold text-foreground">{value}</p>
       </CardContent>
     </Card>
   </motion.div>
@@ -55,8 +55,8 @@ export function Overview() {
         animate={{ opacity: 1, y: 0 }}
         className="space-y-2"
       >
-        <h2 className="text-3xl font-bold text-white">Welcome back</h2>
-        <p className="text-slate-400">Track your portfolio performance and recent activity</p>
+        <h2 className="text-3xl font-bold text-foreground">Welcome back</h2>
+        <p className="text-muted-foreground">Track your portfolio performance and recent activity</p>
       </motion.div>
 
       {/* Metrics Grid */}
@@ -67,7 +67,7 @@ export function Overview() {
         <StatCard icon={Zap} label="Portfolio Yield" value="14.2%" change="2.4" trend="up" />
       </div>
 
-      {/* Charts Grid */}
+      {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Revenue Chart */}
         <motion.div
@@ -76,14 +76,14 @@ export function Overview() {
           transition={{ delay: 0.1 }}
           className="lg:col-span-2"
         >
-          <Card className="bg-slate-800 border-slate-700 h-full">
-            <CardHeader className="border-b border-slate-700 pb-4">
+          <Card className="h-full">
+            <CardHeader className="border-b border-border pb-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-white">Revenue Trend</CardTitle>
-                  <CardDescription className="text-slate-400">Last 6 months</CardDescription>
+                  <CardTitle>Revenue Trend</CardTitle>
+                  <CardDescription>Last 6 months</CardDescription>
                 </div>
-                <Badge variant="outline" className="bg-blue-600/20 text-blue-400 border-blue-700">6M</Badge>
+                <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">6M</Badge>
               </div>
             </CardHeader>
             <CardContent className="p-6">
@@ -95,8 +95,9 @@ export function Overview() {
                     <Tooltip
                       contentStyle={{
                         backgroundColor: '#1e293b',
-                        border: '1px solid #475569',
+                        border: '1px solid #334155',
                         borderRadius: '8px',
+                        color: '#f1f5f9',
                       }}
                       cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
                     />
@@ -114,16 +115,16 @@ export function Overview() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="bg-gradient-to-br from-blue-600/30 to-blue-600/10 border-blue-700/50 h-full flex flex-col items-center justify-center p-6 hover:border-blue-600 transition-all">
+          <Card className="bg-gradient-to-br from-primary/20 to-primary/5 border-primary/20 h-full flex flex-col items-center justify-center p-6 hover:border-primary/40 transition-all">
             <div className="text-center space-y-4">
-              <div className="w-12 h-12 rounded-lg bg-blue-600/40 flex items-center justify-center mx-auto">
-                <Plus className="w-6 h-6 text-blue-400" />
+              <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mx-auto">
+                <Plus className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white mb-1">Start New Deal</h3>
-                <p className="text-sm text-slate-400">Create a new transaction</p>
+                <h3 className="text-lg font-bold text-foreground mb-1">Start New Deal</h3>
+                <p className="text-sm text-muted-foreground">Create a new transaction</p>
               </div>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full">
+              <Button className="w-full">
                 Get Started
               </Button>
             </div>
@@ -131,7 +132,7 @@ export function Overview() {
         </motion.div>
       </div>
 
-      {/* Performance & Distribution */}
+      {/* Performance & Allocation */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Performance Chart */}
         <motion.div
@@ -139,10 +140,10 @@ export function Overview() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader className="border-b border-slate-700 pb-4">
-              <CardTitle className="text-white">Performance Trend</CardTitle>
-              <CardDescription className="text-slate-400">4-week overview</CardDescription>
+          <Card>
+            <CardHeader className="border-b border-border pb-4">
+              <CardTitle>Performance Trend</CardTitle>
+              <CardDescription>4-week overview</CardDescription>
             </CardHeader>
             <CardContent className="p-6">
               <div className="h-80">
@@ -159,8 +160,9 @@ export function Overview() {
                     <Tooltip
                       contentStyle={{
                         backgroundColor: '#1e293b',
-                        border: '1px solid #475569',
+                        border: '1px solid #334155',
                         borderRadius: '8px',
+                        color: '#f1f5f9',
                       }}
                     />
                     <Area
@@ -177,30 +179,30 @@ export function Overview() {
           </Card>
         </motion.div>
 
-        {/* Portfolio Distribution */}
+        {/* Portfolio Allocation */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader className="border-b border-slate-700 pb-4">
-              <CardTitle className="text-white">Asset Allocation</CardTitle>
-              <CardDescription className="text-slate-400">Portfolio breakdown</CardDescription>
+          <Card>
+            <CardHeader className="border-b border-border pb-4">
+              <CardTitle>Asset Allocation</CardTitle>
+              <CardDescription>Portfolio breakdown</CardDescription>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-6 space-y-5">
               {[
-                { label: "Real Estate", value: "42%", color: "bg-blue-600" },
-                { label: "Digital Assets", value: "28%", color: "bg-emerald-600" },
-                { label: "Securities", value: "18%", color: "bg-amber-600" },
-                { label: "Cash Reserve", value: "12%", color: "bg-slate-600" },
+                { label: "Real Estate", value: "42%", color: "bg-blue-500" },
+                { label: "Digital Assets", value: "28%", color: "bg-emerald-500" },
+                { label: "Securities", value: "18%", color: "bg-amber-500" },
+                { label: "Cash Reserve", value: "12%", color: "bg-slate-500" },
               ].map((item, i) => (
                 <div key={i} className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-slate-300 font-medium">{item.label}</span>
-                    <span className="text-white font-bold">{item.value}</span>
+                    <span className="text-foreground font-medium">{item.label}</span>
+                    <span className="text-foreground font-bold">{item.value}</span>
                   </div>
-                  <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                  <div className="h-2 bg-muted rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: item.value }}
@@ -221,25 +223,25 @@ export function Overview() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <Card className="bg-slate-800 border-slate-700">
-          <CardHeader className="border-b border-slate-700 pb-4 flex items-center justify-between flex-row">
+        <Card>
+          <CardHeader className="border-b border-border pb-4 flex items-center justify-between flex-row">
             <div>
-              <CardTitle className="text-white">Recent Transactions</CardTitle>
-              <CardDescription className="text-slate-400">Latest activity</CardDescription>
+              <CardTitle>Recent Transactions</CardTitle>
+              <CardDescription>Latest activity</CardDescription>
             </div>
-            <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-700">
+            <Button variant="outline" size="sm">
               View All
             </Button>
           </CardHeader>
           <CardContent className="p-6 overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="border-slate-700 hover:bg-transparent">
-                  <TableHead className="text-slate-400">Transaction</TableHead>
-                  <TableHead className="text-slate-400">Type</TableHead>
-                  <TableHead className="text-slate-400">Amount</TableHead>
-                  <TableHead className="text-slate-400">Date</TableHead>
-                  <TableHead className="text-right text-slate-400">Status</TableHead>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Transaction</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead className="text-right">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -251,26 +253,20 @@ export function Overview() {
                   { title: "Portfolio Rebalance", type: "Adjustment", amount: "€45,000", date: "1w ago", status: "completed", icon: CheckCircle2 },
                 ].map((tx, i) => {
                   const StatusIcon = tx.icon;
-                  const statusColors = {
-                    completed: 'bg-emerald-600/20 text-emerald-400 border-emerald-700/50',
-                    pending: 'bg-yellow-600/20 text-yellow-400 border-yellow-700/50',
-                  };
                   return (
-                    <TableRow key={i} className="border-slate-700 hover:bg-slate-700/50 transition-colors">
-                      <TableCell className="text-white font-medium">{tx.title}</TableCell>
+                    <TableRow key={i}>
+                      <TableCell className="font-medium">{tx.title}</TableCell>
                       <TableCell>
-                        <Badge variant="outline" className="border-slate-600 text-slate-300 bg-slate-700/50">
-                          {tx.type}
-                        </Badge>
+                        <Badge variant="outline">{tx.type}</Badge>
                       </TableCell>
-                      <TableCell className="text-white font-bold">{tx.amount}</TableCell>
-                      <TableCell className="text-slate-400">{tx.date}</TableCell>
+                      <TableCell className="font-bold text-primary">{tx.amount}</TableCell>
+                      <TableCell className="text-muted-foreground">{tx.date}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
                           <StatusIcon className="w-4 h-4" style={{
                             color: tx.status === 'completed' ? '#10b981' : '#f59e0b'
                           }} />
-                          <Badge className={`${statusColors[tx.status as keyof typeof statusColors]} border`}>
+                          <Badge className={`${tx.status === 'completed' ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/15 text-amber-400 border-amber-500/20'}`}>
                             {tx.status}
                           </Badge>
                         </div>

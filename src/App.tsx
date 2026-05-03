@@ -102,10 +102,10 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
-          <div className="size-12 rounded-xl bg-blue-600 animate-pulse" />
-          <p className="text-sm text-slate-400">Loading...</p>
+          <div className="size-12 rounded-xl bg-primary animate-pulse" />
+          <p className="text-sm text-muted-foreground">Loading...</p>
         </div>
       </div>
     );
@@ -122,26 +122,26 @@ export default function App() {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <div className="flex h-screen bg-slate-950 overflow-hidden">
+      <div className="flex h-screen bg-background overflow-hidden">
         {/* Sidebar */}
         <div
-          className={`fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 border-r border-slate-800 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-40 w-64 bg-card border-r border-border transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${
             sidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-slate-800">
+          <div className="flex items-center justify-between h-16 px-6 border-b border-border">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">Z</span>
+              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-sm">Z</span>
               </div>
-              <span className="font-bold text-white text-sm">Zenith</span>
+              <span className="font-bold text-foreground text-sm">Zenith</span>
             </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-1 hover:bg-slate-800 rounded-lg transition-colors"
+              className="lg:hidden p-1 hover:bg-muted rounded-lg transition-colors"
             >
-              <X className="w-4 h-4 text-slate-400" />
+              <X className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
 
@@ -159,8 +159,8 @@ export default function App() {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
-                      : "text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+                      ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
                   <Icon className="w-5 h-5 flex-shrink-0" />
@@ -172,22 +172,22 @@ export default function App() {
           </nav>
 
           {/* Footer */}
-          <div className="absolute bottom-0 left-0 right-0 border-t border-slate-800 bg-slate-900 p-4">
+          <div className="absolute bottom-0 left-0 right-0 border-t border-border bg-card p-4">
             {user && (
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold flex-shrink-0">
                   {user.displayName?.charAt(0) || "U"}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{user.displayName || "User"}</p>
-                  <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                  <p className="text-sm font-medium text-foreground truncate">{user.displayName || "User"}</p>
+                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                 </div>
               </div>
             )}
             <Button
               onClick={() => supabase.auth.signOut()}
               variant="outline"
-              className="w-full gap-2 border-slate-700 text-slate-300 hover:bg-slate-800 text-sm"
+              className="w-full gap-2 text-sm"
             >
               <LogOut className="w-4 h-4" />
               Sign Out
@@ -206,32 +206,32 @@ export default function App() {
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Header */}
-          <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 flex-shrink-0">
+          <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-8 flex-shrink-0">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden p-2 hover:bg-slate-800 rounded-lg transition-colors"
+                className="lg:hidden p-2 hover:bg-muted rounded-lg transition-colors"
               >
-                <Menu className="w-5 h-5 text-slate-400" />
+                <Menu className="w-5 h-5 text-muted-foreground" />
               </button>
               <div>
-                <h1 className="text-xl font-bold text-white">{getPageTitle()}</h1>
-                <p className="text-xs text-slate-400 mt-0.5">Manage your enterprise</p>
+                <h1 className="text-xl font-bold text-foreground">{getPageTitle()}</h1>
+                <p className="text-xs text-muted-foreground mt-0.5">Manage your enterprise</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <Button className="hidden sm:inline-flex gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm">
+              <Button className="hidden sm:inline-flex gap-2 text-sm">
                 New Listing
               </Button>
-              <Button className="bg-green-600 hover:bg-green-700 text-white text-sm">
+              <Button variant="outline" className="text-sm border-primary/50 text-primary hover:bg-primary/10">
                 Withdraw
               </Button>
             </div>
           </header>
 
           {/* Content */}
-          <main className="flex-1 overflow-y-auto bg-gradient-to-b from-slate-950 to-slate-900">
+          <main className="flex-1 overflow-y-auto bg-background">
             <div className="p-6 md:p-8">
               <div className="max-w-7xl mx-auto">
                 <AnimatePresence mode="wait">

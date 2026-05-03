@@ -23,7 +23,7 @@ const sectorData = [
   { name: 'Real Estate', value: 200 },
 ];
 
-const COLORS = ['#D4AF37', '#3b82f6', '#10b981', '#f59e0b'];
+const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'];
 
 export function GlobalAnalytics() {
   return (
@@ -77,14 +77,14 @@ export function GlobalAnalytics() {
               <AreaChart data={revenueData}>
                 <defs>
                   <linearGradient id="colorMrk" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#D4AF37" stopOpacity={0.8}/>
-                    <stop offset="95%" stopColor="#D4AF37" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
                 <XAxis dataKey="month" fontSize={11} strokeOpacity={0.3} axisLine={false} tickLine={false} />
                 <YAxis fontSize={11} strokeOpacity={0.3} axisLine={false} tickLine={false} />
                 <Tooltip contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
-                <Area type="monotone" dataKey="marketplace" stroke="#D4AF37" fillOpacity={1} fill="url(#colorMrk)" />
+                <Area type="monotone" dataKey="marketplace" stroke="#3b82f6" fillOpacity={1} fill="url(#colorMrk)" />
                 <Area type="monotone" dataKey="realEstate" stroke="#3b82f6" fillOpacity={0} fill="#3b82f6" />
                 <Area type="monotone" dataKey="workflow" stroke="#10b981" fillOpacity={0} fill="#10b981" />
               </AreaChart>

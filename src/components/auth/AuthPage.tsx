@@ -81,23 +81,23 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
               I
             </motion.div>
             <div className="text-center space-y-2">
-              <h1 className="text-4xl font-serif italic tracking-tight text-white font-bold">Imperium</h1>
+              <h1 className="text-4xl font-serif italic tracking-tight text-foreground font-bold">Imperium</h1>
               <p className="text-primary font-bold text-sm uppercase tracking-[0.2em]">Global Asset Management</p>
               <p className="text-xs text-muted-foreground uppercase tracking-[0.15em] opacity-60 mt-1">Enterprise-Grade Portfolio Ecosystem</p>
             </div>
           </div>
 
           <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 bg-white/5 p-1.5 rounded-xl border border-white/10">
+            <TabsList className="grid w-full grid-cols-2 mb-8 bg-muted/50 p-1.5 rounded-xl border border-border">
               <TabsTrigger value="login" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black text-xs uppercase tracking-widest font-bold h-11 transition-all">Login</TabsTrigger>
               <TabsTrigger value="signup" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black text-xs uppercase tracking-widest font-bold h-11 transition-all">Register</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.2 }}>
-                <Card className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg">
-                  <CardHeader className="text-center pb-3 bg-gradient-to-r from-primary/10 to-transparent border-b border-white/5">
-                    <CardTitle className="text-xl font-serif font-bold text-white">Executive Access</CardTitle>
+                <Card className="bg-gradient-to-b from-card to-card/50 border-border rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg">
+                  <CardHeader className="text-center pb-3 bg-gradient-to-r from-primary/10 to-transparent border-b border-border">
+                    <CardTitle className="text-xl font-serif font-bold text-foreground">Executive Access</CardTitle>
                     <CardDescription className="text-[10px] uppercase tracking-widest opacity-50 mt-1">Identity verification required</CardDescription>
                   </CardHeader>
                   <form onSubmit={handleLogin}>
@@ -110,7 +110,7 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
                             id="email"
                             type="email"
                             placeholder="executive@imperium.com"
-                            className="pl-10 bg-white/5 border-white/10 focus:bg-white/10 focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
+                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -124,7 +124,7 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
                           <Input
                             id="password"
                             type="password"
-                            className="pl-10 bg-white/5 border-white/10 focus:bg-white/10 focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
+                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -144,9 +144,9 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
 
             <TabsContent value="signup">
               <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.2 }}>
-                <Card className="bg-gradient-to-b from-white/[0.08] to-white/[0.02] border-white/10 rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg">
-                  <CardHeader className="text-center pb-3 bg-gradient-to-r from-primary/10 to-transparent border-b border-white/5">
-                    <CardTitle className="text-xl font-serif font-bold text-white">Onboard Entity</CardTitle>
+                <Card className="bg-gradient-to-b from-card to-card/50 border-border rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg">
+                  <CardHeader className="text-center pb-3 bg-gradient-to-r from-primary/10 to-transparent border-b border-border">
+                    <CardTitle className="text-xl font-serif font-bold text-foreground">Onboard Entity</CardTitle>
                     <CardDescription className="text-[10px] uppercase tracking-widest opacity-50 mt-1">Register new asset manager</CardDescription>
                   </CardHeader>
                   <form onSubmit={handleSignUp}>
@@ -158,7 +158,7 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
                           <Input
                             id="signup-name"
                             placeholder="Julian De Roche"
-                            className="pl-10 bg-white/5 border-white/10 focus:bg-white/10 focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
+                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
                             value={displayName}
                             onChange={(e) => setDisplayName(e.target.value)}
                             required
@@ -172,7 +172,7 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
                           <Input
                             id="signup-email"
                             type="email"
-                            className="pl-10 bg-white/5 border-white/10 focus:bg-white/10 focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
+                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
@@ -186,7 +186,7 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
                           <Input
                             id="signup-password"
                             type="password"
-                            className="pl-10 bg-white/5 border-white/10 focus:bg-white/10 focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
+                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
@@ -206,7 +206,7 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
             </TabsContent>
           </Tabs>
 
-          <div className="mt-8 pt-6 border-t border-white/5 space-y-3 text-center">
+          <div className="mt-8 pt-6 border-t border-border space-y-3 text-center">
             <p className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground flex items-center justify-center gap-2 font-bold">
               <ShieldCheck className="size-3 text-primary animate-pulse" /> 256-BIT ENCRYPTION ACTIVE
             </p>
@@ -218,7 +218,7 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
         </motion.div>
       </div>
 
-      <div className="px-4 py-6 text-center border-t border-white/5">
+      <div className="px-4 py-6 text-center border-t border-border">
         <p className="text-[8px] text-muted-foreground/50 uppercase tracking-[0.2em] font-bold">Powered by Zenith Enterprise Hub v1.0</p>
       </div>
     </div>

@@ -44,7 +44,7 @@ export function WorkflowModule() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-card border-white/5 rounded-2xl">
+        <Card className="bg-card border-border rounded-2xl">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Trophy className="size-5 text-primary" />
@@ -57,7 +57,7 @@ export function WorkflowModule() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-white/5 rounded-2xl">
+        <Card className="bg-card border-border rounded-2xl">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Zap className="size-5 text-blue-500" />
@@ -70,7 +70,7 @@ export function WorkflowModule() {
           </CardContent>
         </Card>
 
-        <Card className="bg-card border-white/5 rounded-2xl">
+        <Card className="bg-card border-border rounded-2xl">
           <CardHeader>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="size-5 text-emerald-500" />

@@ -61,16 +61,16 @@ export function BusinessMarketplace() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
-      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between border-b border-white/5 pb-8">
+      <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between border-b border-border pb-8">
         <div>
-          <h2 className="text-4xl font-serif italic tracking-tight text-white mb-2">Asset Marketplace</h2>
+          <h2 className="text-4xl font-serif italic tracking-tight text-foreground mb-2">Asset Marketplace</h2>
           <p className="text-[10px] uppercase tracking-[0.3em] opacity-40 font-bold">Acquire high-yield institutional grade assets</p>
         </div>
         <div className="relative w-full md:w-80">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-primary opacity-40" />
           <Input
             placeholder="Search portfolios..."
-            className="pl-12 bg-white/5 border-white/5 focus:border-primary/50 transition-all rounded-full h-12 text-sm"
+            className="pl-12 bg-muted/50 border-border focus:border-primary/50 transition-all rounded-full h-12 text-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -145,7 +145,7 @@ function BusinessCard({ listing }: { listing: BusinessListing }) {
   };
 
   return (
-    <Card className="flex flex-col h-full bg-card border-white/5 rounded-2xl overflow-hidden hover:border-primary/20 transition-all group shadow-xl">
+    <Card className="flex flex-col h-full bg-card border-border rounded-2xl overflow-hidden hover:border-primary/20 transition-all group shadow-xl">
       <CardHeader className="pb-4">
         <div className="flex justify-between items-start mb-4">
           <Badge variant="outline" className="uppercase tracking-[0.2em] text-[8px] border-primary/30 text-primary bg-primary/5 h-5 px-3 rounded-full font-bold">Institutional</Badge>
@@ -156,7 +156,7 @@ function BusinessCard({ listing }: { listing: BusinessListing }) {
       </CardHeader>
       <CardContent className="flex-1 pb-6">
         <div className="grid grid-cols-2 gap-6 mt-4">
-          <div className="space-y-1.5 border-l border-white/5 pl-3">
+          <div className="space-y-1.5 border-l border-border pl-3">
             <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground opacity-40 flex items-center gap-1.5">
               <TrendingUp className="size-3" /> Monthly Yield
             </p>
@@ -173,11 +173,11 @@ function BusinessCard({ listing }: { listing: BusinessListing }) {
       <CardFooter className="p-0">
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full bg-white/5 rounded-none h-14 font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-primary hover:text-black transition-all gap-2 border-t border-white/5">
+            <Button className="w-full bg-muted/50 rounded-none h-14 font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-primary hover:text-black transition-all gap-2 border-t border-border">
               <MessageSquare className="size-3" /> Initialize Inquiry
             </Button>
           </DialogTrigger>
-          <DialogContent className="bg-card border-white/10 rounded-2xl">
+          <DialogContent className="bg-card border-border rounded-2xl">
             <DialogHeader>
               <DialogTitle className="font-serif italic text-2xl">Security Protocol: Inquiry</DialogTitle>
               <DialogDescription className="text-xs uppercase tracking-widest opacity-40">
@@ -191,7 +191,7 @@ function BusinessCard({ listing }: { listing: BusinessListing }) {
                   <Textarea
                     id="message"
                     placeholder="Provide details of your acquisition criteria..."
-                    className="min-h-[140px] bg-white/5 border-white/5 rounded-xl focus:border-primary/50 transition-all"
+                    className="min-h-[140px] bg-muted/50 border-border rounded-xl focus:border-primary/50 transition-all"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     required
