@@ -13,14 +13,21 @@ import { AIChatbot } from "@/components/ai/AIChatbot";
 import { AuthPage } from "@/components/auth/AuthPage";
 import { BusinessMarketplace } from "@/components/marketplace/BusinessMarketplace";
 import { SellerDashboard } from "@/components/dashboard/SellerDashboard";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { motion, AnimatePresence } from "motion/react";
 import { User as AppUser } from "@/types";
 import { ThemeProvider } from "next-themes";
 import { supabase } from "@/lib/supabase";
-import { Menu } from "lucide-react";
+import { Menu, X, LayoutDashboard, Store, Building2, Workflow, ChartBar as BarChart3, LogOut, ChevronRight } from "lucide-react";
+
+const navItems = [
+  { title: "Dashboard", id: "overview", icon: LayoutDashboard },
+  { title: "Marketplace", id: "biz-marketplace", icon: Store },
+  { title: "Real Estate", id: "real-estate", icon: Building2 },
+  { title: "Workflow", id: "workflow", icon: Workflow },
+  { title: "Analytics", id: "analytics", icon: BarChart3 },
+];
 
 export default function App() {
   const [activeView, setActiveView] = useState("overview");
@@ -80,38 +87,25 @@ export default function App() {
     }
   };
 
-  const getBreadcrumb = () => {
-    const views: Record<string, string> = {
+  const getPageTitle = () => {
+    const titles: Record<string, string> = {
       overview: "Dashboard",
-      "biz-marketplace": "Buyer Marketplace",
+      "biz-marketplace": "Marketplace",
       "seller-hub": "Seller Hub",
       marketplace: "Marketplace Hub",
-      "real-estate": "Real Estate Management",
-      workflow: "Project Workflow",
-      analytics: "Global Analytics",
-      team: "Team Management",
-      projects: "Project Portfolio",
-      settings: "Platform Settings"
+      "real-estate": "Real Estate",
+      workflow: "Workflow",
+      analytics: "Analytics",
     };
-    return views[activeView] || "Home";
+    return titles[activeView] || "Dashboard";
   };
-
-  const navItems = [
-    { title: "Dashboard", id: "overview" },
-    { title: "Buyer Marketplace", id: "biz-marketplace" },
-    { title: "Seller Hub", id: "seller-hub" },
-    { title: "Marketplace Hub", id: "marketplace" },
-    { title: "Real Estate", id: "real-estate" },
-    { title: "Workflow", id: "workflow" },
-    { title: "Analytics", id: "analytics" },
-  ];
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
         <div className="flex flex-col items-center gap-4">
-          <div className="size-12 rounded-xl bg-primary animate-pulse" />
-          <p className="text-sm font-serif italic text-muted-foreground">Initializing Neural Link...</p>
+          <div className="size-12 rounded-xl bg-blue-600 animate-pulse" />
+          <p className="text-sm text-slate-400">Loading...</p>
         </div>
       </div>
     );
@@ -128,89 +122,125 @@ export default function App() {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <div className="flex w-full h-screen bg-gradient-to-br from-background via-background to-black/40">
+      <div className="flex h-screen bg-slate-950 overflow-hidden">
         {/* Sidebar */}
-        <aside className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-200 border-r border-white/5 bg-black/80 backdrop-blur-lg overflow-hidden flex flex-col`}>
-          <div className="p-4 border-b border-white/5">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center size-8 rounded-lg bg-primary/20 text-primary">
-                <span className="font-serif italic font-bold text-sm">I</span>
+        <div
+          className={`fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 border-r border-slate-800 transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          {/* Logo */}
+          <div className="flex items-center justify-between h-16 px-6 border-b border-slate-800">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">Z</span>
               </div>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-lg font-serif italic tracking-tight text-primary font-bold">Imperium</h1>
-                <p className="text-[7px] uppercase tracking-[0.15em] opacity-40 font-bold">Enterprise</p>
-              </div>
+              <span className="font-bold text-white text-sm">Zenith</span>
             </div>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden p-1 hover:bg-slate-800 rounded-lg transition-colors"
+            >
+              <X className="w-4 h-4 text-slate-400" />
+            </button>
           </div>
 
-          <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveView(item.id)}
-                className={`w-full text-left px-3 py-2.5 rounded-lg transition-all text-xs h-10 font-medium ${
-                  activeView === item.id
-                    ? "bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/25 text-primary"
-                    : "text-muted-foreground hover:bg-white/5 opacity-60 hover:opacity-100"
-                }`}
-              >
-                {item.title}
-              </button>
-            ))}
+          {/* Navigation */}
+          <nav className="px-3 py-6 space-y-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeView === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveView(item.id);
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-600/20"
+                      : "text-slate-400 hover:bg-slate-800 hover:text-slate-100"
+                  }`}
+                >
+                  <Icon className="w-5 h-5 flex-shrink-0" />
+                  <span className="text-sm font-medium flex-1 text-left">{item.title}</span>
+                  {isActive && <ChevronRight className="w-4 h-4" />}
+                </button>
+              );
+            })}
           </nav>
 
-          <div className="border-t border-white/10 p-4">
-            <p className="text-[6px] text-muted-foreground/50 uppercase tracking-[0.1em] font-bold">v1.0 Enterprise</p>
+          {/* Footer */}
+          <div className="absolute bottom-0 left-0 right-0 border-t border-slate-800 bg-slate-900 p-4">
+            {user && (
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                  {user.displayName?.charAt(0) || "U"}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">{user.displayName || "User"}</p>
+                  <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                </div>
+              </div>
+            )}
+            <Button
+              onClick={() => supabase.auth.signOut()}
+              variant="outline"
+              className="w-full gap-2 border-slate-700 text-slate-300 hover:bg-slate-800 text-sm"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
           </div>
-        </aside>
+        </div>
+
+        {/* Overlay */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <header className="h-16 border-b border-white/5 flex items-center justify-between px-4 md:px-8 bg-background/80 backdrop-blur-xl z-40 gap-4">
-            <div className="flex items-center gap-2 md:gap-6 flex-1 min-w-0">
-              <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-white/5 rounded-lg">
-                <Menu className="size-5" />
+          {/* Header */}
+          <header className="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 flex-shrink-0">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden p-2 hover:bg-slate-800 rounded-lg transition-colors"
+              >
+                <Menu className="w-5 h-5 text-slate-400" />
               </button>
-              <div className="hidden md:flex flex-col gap-0.5">
-                <span className="text-[8px] uppercase tracking-widest opacity-40 font-bold">Total Assets</span>
-                <span className="text-lg font-serif font-bold">€1.2M</span>
-              </div>
-              <div className="hidden md:block h-6 w-px bg-white/10"></div>
-              <div className="hidden lg:flex flex-col gap-0.5">
-                <span className="text-[8px] uppercase tracking-widest opacity-40 font-bold">Portfolio Yield</span>
-                <span className="text-lg font-serif text-primary font-bold">+14.2%</span>
+              <div>
+                <h1 className="text-xl font-bold text-white">{getPageTitle()}</h1>
+                <p className="text-xs text-slate-400 mt-0.5">Manage your enterprise</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 md:gap-3 shrink-0">
-              <Breadcrumb className="hidden xl:block max-w-[200px]">
-                <BreadcrumbList className="flex-wrap">
-                  <BreadcrumbItem>
-                    <BreadcrumbPage className="font-serif italic text-primary text-xs uppercase tracking-tight truncate">{getBreadcrumb()}</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>
-              <div className="flex gap-1.5">
-                <Button variant="outline" size="sm" className="rounded-lg h-9 text-[8px] uppercase tracking-[0.15em] border-primary/30 text-primary hover:bg-primary/10 hidden sm:inline-flex px-3">
-                  New Listing
-                </Button>
-                <Button size="sm" className="rounded-lg h-9 text-[8px] font-bold uppercase tracking-[0.15em] bg-primary text-black hover:bg-primary/90 px-3">
-                  Withdraw
-                </Button>
-              </div>
+            <div className="flex items-center gap-3">
+              <Button className="hidden sm:inline-flex gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm">
+                New Listing
+              </Button>
+              <Button className="bg-green-600 hover:bg-green-700 text-white text-sm">
+                Withdraw
+              </Button>
             </div>
           </header>
 
-          <main className="flex-1 overflow-y-auto overflow-x-hidden">
-            <div className="p-4 md:p-8 lg:p-12">
-              <div className="max-w-7xl mx-auto w-full">
+          {/* Content */}
+          <main className="flex-1 overflow-y-auto bg-gradient-to-b from-slate-950 to-slate-900">
+            <div className="p-6 md:p-8">
+              <div className="max-w-7xl mx-auto">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={activeView}
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.3 }}
                   >
                     {renderView()}
                   </motion.div>
@@ -220,6 +250,7 @@ export default function App() {
           </main>
         </div>
       </div>
+
       <AIChatbot />
       <Toaster />
     </ThemeProvider>

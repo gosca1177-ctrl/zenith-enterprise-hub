@@ -2,17 +2,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell, LineChart, Line, Area, AreaChart } from "recharts";
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, LineChart, Line, Area, AreaChart } from "recharts";
 import { motion } from "motion/react";
-import { TrendingUp, TrendingDown, DollarSign, ArrowUpRight, ArrowDownRight, Zap, Activity, Target, Plus, Clock, CircleCheck as CheckCircle2, CircleAlert as AlertCircle } from "lucide-react";
+import { TrendingUp, DollarSign, ArrowUpRight, ArrowDownRight, Activity, Zap, CircleCheck as CheckCircle2, Clock, CircleAlert as AlertCircle, Plus } from "lucide-react";
 
 const revenueData = [
-  { name: "Jan", value: 3200, target: 4000 },
-  { name: "Feb", value: 4100, target: 4000 },
-  { name: "Mar", value: 2800, target: 4000 },
-  { name: "Apr", value: 5400, target: 4000 },
-  { name: "May", value: 3900, target: 4000 },
-  { name: "Jun", value: 4800, target: 4000 },
+  { name: "Jan", value: 3200 },
+  { name: "Feb", value: 4100 },
+  { name: "Mar", value: 2800 },
+  { name: "Apr", value: 5400 },
+  { name: "May", value: 3900 },
+  { name: "Jun", value: 4800 },
 ];
 
 const performanceData = [
@@ -22,27 +22,25 @@ const performanceData = [
   { name: "Week 4", performance: 92 },
 ];
 
-const StatCard = ({ icon: Icon, label, value, change, positive }: any) => (
+const StatCard = ({ icon: Icon, label, value, change, trend }: any) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="group"
+    className="h-full"
   >
-    <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 hover:border-primary/30 transition-all overflow-hidden h-full">
-      <CardContent className="p-3 sm:p-4 md:p-6 space-y-2 md:space-y-3">
-        <div className="flex items-center justify-between gap-2">
-          <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors shrink-0">
-            <Icon className="size-4 md:size-5 text-primary" />
+    <Card className="bg-slate-800 border-slate-700 hover:border-slate-600 hover:bg-slate-800/80 transition-all h-full">
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between mb-4">
+          <div className="p-3 bg-blue-600/20 rounded-lg">
+            <Icon className="w-5 h-5 text-blue-500" />
           </div>
-          <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5 text-[7px] sm:text-[9px] uppercase font-bold tracking-tight gap-1 h-5 px-1.5">
-            {positive ? <ArrowUpRight className="size-2" /> : <ArrowDownRight className="size-2" />}
+          <Badge className={`gap-1 ${trend === 'up' ? 'bg-emerald-600/20 text-emerald-400' : 'bg-red-600/20 text-red-400'}`}>
+            {trend === 'up' ? <ArrowUpRight className="w-3 h-3" /> : <ArrowDownRight className="w-3 h-3" />}
             {change}%
           </Badge>
         </div>
-        <div>
-          <p className="text-[7px] sm:text-[10px] uppercase tracking-widest opacity-60 font-semibold">{label}</p>
-          <p className="text-lg sm:text-2xl font-bold font-mono mt-1 truncate">{value}</p>
-        </div>
+        <p className="text-sm text-slate-400 mb-1">{label}</p>
+        <p className="text-3xl font-bold text-white">{value}</p>
       </CardContent>
     </Card>
   </motion.div>
@@ -50,53 +48,59 @@ const StatCard = ({ icon: Icon, label, value, change, positive }: any) => (
 
 export function Overview() {
   return (
-    <div className="space-y-6 pb-8">
-      <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="space-y-1">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground font-serif italic text-sm">Real-time enterprise metrics and portfolio analysis</p>
+    <div className="space-y-8">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-2"
+      >
+        <h2 className="text-3xl font-bold text-white">Welcome back</h2>
+        <p className="text-slate-400">Track your portfolio performance and recent activity</p>
       </motion.div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
-        <StatCard icon={DollarSign} label="Total Assets" value="€1.2M" change="12.5" positive />
-        <StatCard icon={TrendingUp} label="Monthly Revenue" value="€84.2K" change="8.3" positive />
-        <StatCard icon={Activity} label="Active Transactions" value="247" change="3.1" positive />
-        <StatCard icon={Zap} label="Portfolio Yield" value="14.2%" change="2.4" positive />
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard icon={DollarSign} label="Total Assets" value="€1.2M" change="12.5" trend="up" />
+        <StatCard icon={TrendingUp} label="Monthly Revenue" value="€84.2K" change="8.3" trend="up" />
+        <StatCard icon={Activity} label="Active Transactions" value="247" change="3.1" trend="up" />
+        <StatCard icon={Zap} label="Portfolio Yield" value="14.2%" change="2.4" trend="up" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Revenue Chart */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="lg:col-span-2 overflow-hidden"
+          className="lg:col-span-2"
         >
-          <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 overflow-hidden">
-            <CardHeader className="border-b border-white/5 pb-3 md:pb-4">
-              <div className="flex items-center justify-between gap-3">
+          <Card className="bg-slate-800 border-slate-700 h-full">
+            <CardHeader className="border-b border-slate-700 pb-4">
+              <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-sm md:text-lg font-serif">Revenue Analysis</CardTitle>
-                  <CardDescription className="text-[8px] md:text-[10px] uppercase tracking-widest opacity-50 mt-1">Monthly performance vs target</CardDescription>
+                  <CardTitle className="text-white">Revenue Trend</CardTitle>
+                  <CardDescription className="text-slate-400">Last 6 months</CardDescription>
                 </div>
-                <Badge variant="outline" className="border-primary/30 text-primary bg-primary/5 shrink-0 text-xs">6M</Badge>
+                <Badge variant="outline" className="bg-blue-600/20 text-blue-400 border-blue-700">6M</Badge>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="h-[200px] sm:h-[250px] md:h-[300px] w-full overflow-x-auto">
+            <CardContent className="p-6">
+              <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={revenueData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#D4AF37" stopOpacity={0.8} />
-                        <stop offset="100%" stopColor="#D4AF37" stopOpacity={0.2} />
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="name" fontSize={10} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} />
-                    <YAxis fontSize={10} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} />
+                  <BarChart data={revenueData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <XAxis dataKey="name" stroke="#64748b" strokeWidth={0.5} />
+                    <YAxis stroke="#64748b" strokeWidth={0.5} />
                     <Tooltip
-                      cursor={{ fill: 'rgba(212, 175, 55, 0.1)' }}
-                      contentStyle={{ backgroundColor: 'rgba(20, 20, 20, 0.8)', borderRadius: '8px', border: '1px solid rgba(212, 175, 55, 0.3)', fontSize: '12px' }}
+                      contentStyle={{
+                        backgroundColor: '#1e293b',
+                        border: '1px solid #475569',
+                        borderRadius: '8px',
+                      }}
+                      cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
                     />
-                    <Bar dataKey="value" fill="url(#barGradient)" radius={[6, 6, 0, 0]} barSize={32} />
+                    <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -104,34 +108,104 @@ export function Overview() {
           </Card>
         </motion.div>
 
+        {/* CTA Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 h-full">
-            <CardHeader className="border-b border-white/5 pb-3 md:pb-4">
-              <CardTitle className="text-sm md:text-lg font-serif">Portfolio Snapshot</CardTitle>
-              <CardDescription className="text-[8px] md:text-[10px] uppercase tracking-widest opacity-50 mt-1">Current distribution</CardDescription>
+          <Card className="bg-gradient-to-br from-blue-600/30 to-blue-600/10 border-blue-700/50 h-full flex flex-col items-center justify-center p-6 hover:border-blue-600 transition-all">
+            <div className="text-center space-y-4">
+              <div className="w-12 h-12 rounded-lg bg-blue-600/40 flex items-center justify-center mx-auto">
+                <Plus className="w-6 h-6 text-blue-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-white mb-1">Start New Deal</h3>
+                <p className="text-sm text-slate-400">Create a new transaction</p>
+              </div>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white w-full">
+                Get Started
+              </Button>
+            </div>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Performance & Distribution */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Performance Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="bg-slate-800 border-slate-700">
+            <CardHeader className="border-b border-slate-700 pb-4">
+              <CardTitle className="text-white">Performance Trend</CardTitle>
+              <CardDescription className="text-slate-400">4-week overview</CardDescription>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 space-y-3">
+            <CardContent className="p-6">
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={performanceData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.4} />
+                        <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="name" stroke="#64748b" strokeWidth={0.5} />
+                    <YAxis stroke="#64748b" strokeWidth={0.5} domain={[0, 100]} />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#1e293b',
+                        border: '1px solid #475569',
+                        borderRadius: '8px',
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="performance"
+                      fill="url(#gradient)"
+                      stroke="#3b82f6"
+                      strokeWidth={2}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Portfolio Distribution */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Card className="bg-slate-800 border-slate-700">
+            <CardHeader className="border-b border-slate-700 pb-4">
+              <CardTitle className="text-white">Asset Allocation</CardTitle>
+              <CardDescription className="text-slate-400">Portfolio breakdown</CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
               {[
-                { label: "Real Estate", value: "42%", color: "from-blue-500" },
-                { label: "Digital Assets", value: "28%", color: "from-primary" },
-                { label: "Securities", value: "18%", color: "from-emerald-500" },
-                { label: "Cash Reserve", value: "12%", color: "from-gray-500" },
+                { label: "Real Estate", value: "42%", color: "bg-blue-600" },
+                { label: "Digital Assets", value: "28%", color: "bg-emerald-600" },
+                { label: "Securities", value: "18%", color: "bg-amber-600" },
+                { label: "Cash Reserve", value: "12%", color: "bg-slate-600" },
               ].map((item, i) => (
-                <div key={i} className="space-y-1.5">
-                  <div className="flex justify-between text-xs md:text-sm">
-                    <span className="font-medium">{item.label}</span>
-                    <span className="text-primary font-mono">{item.value}</span>
+                <div key={i} className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-slate-300 font-medium">{item.label}</span>
+                    <span className="text-white font-bold">{item.value}</span>
                   </div>
-                  <div className="h-1.5 md:h-2 bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: item.value }}
-                      transition={{ duration: 1, ease: "easeOut" }}
-                      className={`h-full rounded-full bg-gradient-to-r ${item.color} to-transparent`}
+                      transition={{ duration: 0.8, delay: 0.2 * i }}
+                      className={`h-full ${item.color} rounded-full`}
                     />
                   </div>
                 </div>
@@ -141,140 +215,71 @@ export function Overview() {
         </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="lg:col-span-2 overflow-hidden"
-        >
-          <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10 h-full">
-            <CardHeader className="border-b border-white/5 pb-3">
-              <CardTitle className="text-sm md:text-lg font-serif">Performance Trend</CardTitle>
-              <CardDescription className="text-[8px] md:text-[10px] uppercase tracking-widest opacity-50 mt-1">4-week progress</CardDescription>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="h-[200px] sm:h-[250px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={performanceData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#D4AF37" stopOpacity={0.3} />
-                        <stop offset="100%" stopColor="#D4AF37" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="name" fontSize={10} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} />
-                    <YAxis fontSize={10} stroke="#ffffff" strokeOpacity={0.2} axisLine={false} tickLine={false} domain={[0, 100]} />
-                    <Tooltip contentStyle={{ backgroundColor: 'rgba(20, 20, 20, 0.8)', borderRadius: '8px', border: '1px solid rgba(212, 175, 55, 0.3)' }} />
-                    <Area type="monotone" dataKey="performance" stroke="#D4AF37" strokeWidth={2} fill="url(#lineGradient)" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="overflow-hidden"
-        >
-          <Card className="bg-gradient-to-br from-primary/20 to-primary/5 border-primary/30 h-full flex flex-col items-center justify-center p-4 sm:p-6 relative overflow-hidden group cursor-pointer hover:border-primary/50 transition-all">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="relative z-10 text-center space-y-3 flex flex-col items-center">
-              <div className="p-3 rounded-xl bg-primary/20 group-hover:bg-primary/30 transition-colors">
-                <Plus className="size-6 text-primary" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold font-serif">Start New Deal</h3>
-                <p className="text-xs text-muted-foreground mt-1">Create a new transaction or listing</p>
-              </div>
-              <Button className="gap-2 bg-primary text-black hover:bg-primary/90 font-bold uppercase tracking-[0.1em] text-xs px-4 h-9 mt-2">
-                Get Started <ArrowUpRight className="size-3" />
-              </Button>
-            </div>
-          </Card>
-        </motion.div>
-      </div>
-
+      {/* Recent Transactions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="overflow-hidden"
       >
-        <Card className="bg-gradient-to-br from-white/[0.08] to-white/[0.02] border-white/10">
-          <CardHeader className="border-b border-white/5 pb-3 md:pb-4">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <CardTitle className="text-sm md:text-lg font-serif">Recent Transactions</CardTitle>
-                <CardDescription className="text-[8px] md:text-[10px] uppercase tracking-widest opacity-50 mt-1">Your latest activity</CardDescription>
-              </div>
-              <Button variant="outline" size="sm" className="text-xs border-primary/30 text-primary hover:bg-primary/10">
-                View All
-              </Button>
+        <Card className="bg-slate-800 border-slate-700">
+          <CardHeader className="border-b border-slate-700 pb-4 flex items-center justify-between flex-row">
+            <div>
+              <CardTitle className="text-white">Recent Transactions</CardTitle>
+              <CardDescription className="text-slate-400">Latest activity</CardDescription>
             </div>
+            <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-700">
+              View All
+            </Button>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-white/10 hover:bg-transparent">
-                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Transaction</TableHead>
-                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Type</TableHead>
-                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Amount</TableHead>
-                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground">Date</TableHead>
-                    <TableHead className="text-[9px] uppercase tracking-wider font-bold text-muted-foreground text-right">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {[
-                    { id: 1, title: "Premium Tech Stack", type: "Listing", amount: "€12,500", date: "2h ago", status: "completed", icon: CheckCircle2 },
-                    { id: 2, title: "Berlin Penthouse", type: "Purchase", amount: "€1.2M", date: "1d ago", status: "escrow", icon: Clock },
-                    { id: 3, title: "Q2 Distribution", type: "Dividend", amount: "€8,400", date: "3d ago", status: "completed", icon: CheckCircle2 },
-                    { id: 4, title: "Smart Contract Deploy", type: "Transfer", amount: "€5,200", date: "5d ago", status: "pending", icon: AlertCircle },
-                    { id: 5, title: "Portfolio Rebalance", type: "Adjustment", amount: "€45,000", date: "1w ago", status: "completed", icon: CheckCircle2 },
-                  ].map((transaction) => {
-                    const StatusIcon = transaction.icon;
-                    return (
-                      <TableRow key={transaction.id} className="border-white/5 hover:bg-white/5 transition-colors group cursor-pointer">
-                        <TableCell className="text-xs sm:text-sm font-medium group-hover:text-primary transition-colors">
-                          {transaction.title}
-                        </TableCell>
-                        <TableCell className="text-xs text-muted-foreground">
-                          <Badge variant="outline" className="border-white/10 bg-white/5 text-xs">
-                            {transaction.type}
+          <CardContent className="p-6 overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-slate-700 hover:bg-transparent">
+                  <TableHead className="text-slate-400">Transaction</TableHead>
+                  <TableHead className="text-slate-400">Type</TableHead>
+                  <TableHead className="text-slate-400">Amount</TableHead>
+                  <TableHead className="text-slate-400">Date</TableHead>
+                  <TableHead className="text-right text-slate-400">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {[
+                  { title: "Premium Tech Stack", type: "Listing", amount: "€12,500", date: "2h ago", status: "completed", icon: CheckCircle2 },
+                  { title: "Berlin Penthouse", type: "Purchase", amount: "€1.2M", date: "1d ago", status: "pending", icon: Clock },
+                  { title: "Q2 Distribution", type: "Dividend", amount: "€8,400", date: "3d ago", status: "completed", icon: CheckCircle2 },
+                  { title: "Smart Contract", type: "Transfer", amount: "€5,200", date: "5d ago", status: "pending", icon: AlertCircle },
+                  { title: "Portfolio Rebalance", type: "Adjustment", amount: "€45,000", date: "1w ago", status: "completed", icon: CheckCircle2 },
+                ].map((tx, i) => {
+                  const StatusIcon = tx.icon;
+                  const statusColors = {
+                    completed: 'bg-emerald-600/20 text-emerald-400 border-emerald-700/50',
+                    pending: 'bg-yellow-600/20 text-yellow-400 border-yellow-700/50',
+                  };
+                  return (
+                    <TableRow key={i} className="border-slate-700 hover:bg-slate-700/50 transition-colors">
+                      <TableCell className="text-white font-medium">{tx.title}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="border-slate-600 text-slate-300 bg-slate-700/50">
+                          {tx.type}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-white font-bold">{tx.amount}</TableCell>
+                      <TableCell className="text-slate-400">{tx.date}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <StatusIcon className="w-4 h-4" style={{
+                            color: tx.status === 'completed' ? '#10b981' : '#f59e0b'
+                          }} />
+                          <Badge className={`${statusColors[tx.status as keyof typeof statusColors]} border`}>
+                            {tx.status}
                           </Badge>
-                        </TableCell>
-                        <TableCell className="text-xs sm:text-sm font-mono font-bold text-primary">
-                          {transaction.amount}
-                        </TableCell>
-                        <TableCell className="text-xs text-muted-foreground">
-                          {transaction.date}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <StatusIcon className={`size-3 ${
-                              transaction.status === "completed" ? "text-emerald-500" :
-                              transaction.status === "escrow" ? "text-blue-500" :
-                              "text-yellow-500"
-                            }`} />
-                            <Badge variant="outline" className={`text-[7px] uppercase tracking-tighter ${
-                              transaction.status === "completed" ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/10" :
-                              transaction.status === "escrow" ? "border-blue-500/30 text-blue-400 bg-blue-500/10" :
-                              "border-yellow-500/30 text-yellow-400 bg-yellow-500/10"
-                            }`}>
-                              {transaction.status}
-                            </Badge>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           </CardContent>
         </Card>
       </motion.div>
