@@ -36,34 +36,58 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const loadUser = async (userId: string, email: string, meta: any) => {
+      try {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .maybeSingle();
+
+        if (profile) {
+          setUser({
+            uid: profile.id,
+            email: profile.email,
+            displayName: profile.display_name,
+            role: profile.role,
+            points: profile.points,
+            createdAt: profile.created_at,
+          });
+        } else {
+          setUser({
+            uid: userId,
+            email,
+            displayName: meta?.full_name || "",
+            role: "seller",
+            points: 0,
+            createdAt: new Date().toISOString(),
+          });
+        }
+      } catch {
+        setUser({
+          uid: userId,
+          email,
+          displayName: meta?.full_name || "",
+          role: "seller",
+          points: 0,
+          createdAt: new Date().toISOString(),
+        });
+      }
+    };
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        loadUser(session.user.id, session.user.email || "", session.user.user_metadata);
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       (async () => {
         if (session?.user) {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", session.user.id)
-            .maybeSingle();
-
-          if (profile) {
-            setUser({
-              uid: profile.id,
-              email: profile.email,
-              displayName: profile.display_name,
-              role: profile.role,
-              points: profile.points,
-              createdAt: profile.created_at,
-            });
-          } else {
-            setUser({
-              uid: session.user.id,
-              email: session.user.email || "",
-              displayName: session.user.user_metadata?.full_name || "",
-              role: "seller",
-              points: 0,
-              createdAt: new Date().toISOString(),
-            });
-          }
+          await loadUser(session.user.id, session.user.email || "", session.user.user_metadata);
         } else {
           setUser(null);
         }

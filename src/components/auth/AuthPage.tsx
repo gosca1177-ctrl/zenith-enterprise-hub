@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { User, Mail, Lock, ShieldCheck, CircleCheck as CheckCircle2, ArrowRight } from "lucide-react";
+import { User, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 
 export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
@@ -15,17 +15,29 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("login");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password) {
+      toast.error("Please enter your email and password");
+      return;
+    }
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      if (error) {
+        if (error.message === "Invalid login credentials") {
+          toast.error("Invalid email or password. Please check your credentials or register a new account.");
+        } else {
+          toast.error(error.message);
+        }
+        return;
+      }
       toast.success("Welcome back!");
       onAuthSuccess();
     } catch (error: any) {
-      toast.error(error.message || "Failed to login");
+      toast.error("Connection failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -33,6 +45,14 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password || !displayName) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
     setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -42,185 +62,183 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
           data: { full_name: displayName },
         },
       });
-      if (error) throw error;
-
-      if (data.user) {
-        const { error: profileError } = await supabase.from("profiles").insert({
-          id: data.user.id,
-          email,
-          display_name: displayName,
-          role: "seller",
-          points: 0,
-        });
-        if (profileError) console.error("Profile creation error:", profileError);
+      if (error) {
+        toast.error(error.message);
+        return;
       }
 
-      toast.success("Account created successfully!");
-      onAuthSuccess();
+      if (data.user) {
+        if (data.session) {
+          const { error: profileError } = await supabase.from("profiles").insert({
+            id: data.user.id,
+            email,
+            display_name: displayName,
+            role: "seller",
+            points: 0,
+          });
+          if (profileError) {
+            console.error("Profile creation error:", profileError);
+          }
+          toast.success("Account created! Welcome aboard.");
+          onAuthSuccess();
+        } else {
+          toast.success("Account created! You can now log in.");
+          setActiveTab("login");
+          setPassword("");
+        }
+      }
     } catch (error: any) {
-      toast.error(error.message || "Failed to sign up");
+      toast.error("Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-black/50 flex flex-col">
-      <div className="flex-1 flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md"
-        >
-          <div className="flex flex-col items-center gap-6 mb-12">
-            <motion.div
-              className="flex aspect-square size-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/80 text-black font-serif italic text-4xl font-bold shadow-2xl shadow-primary/30 border border-primary/50"
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              I
-            </motion.div>
-            <div className="text-center space-y-2">
-              <h1 className="text-4xl font-serif italic tracking-tight text-foreground font-bold">Imperium</h1>
-              <p className="text-primary font-bold text-sm uppercase tracking-[0.2em]">Global Asset Management</p>
-              <p className="text-xs text-muted-foreground uppercase tracking-[0.15em] opacity-60 mt-1">Enterprise-Grade Portfolio Ecosystem</p>
-            </div>
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md"
+      >
+        {/* Branding */}
+        <div className="flex flex-col items-center gap-4 mb-8">
+          <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-xl">Z</span>
           </div>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-foreground">Zenith</h1>
+            <p className="text-sm text-muted-foreground mt-1">Enterprise Asset Management</p>
+          </div>
+        </div>
 
-          <Tabs defaultValue="login" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 bg-muted/50 p-1.5 rounded-xl border border-border">
-              <TabsTrigger value="login" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black text-xs uppercase tracking-widest font-bold h-11 transition-all">Login</TabsTrigger>
-              <TabsTrigger value="signup" className="rounded-lg data-[state=active]:bg-primary data-[state=active]:text-black text-xs uppercase tracking-widest font-bold h-11 transition-all">Register</TabsTrigger>
+        {/* Auth Card */}
+        <Card>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-2 m-4 mb-0 bg-muted/50">
+              <TabsTrigger value="login">Sign In</TabsTrigger>
+              <TabsTrigger value="signup">Register</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="login">
-              <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.2 }}>
-                <Card className="bg-gradient-to-b from-card to-card/50 border-border rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg">
-                  <CardHeader className="text-center pb-3 bg-gradient-to-r from-primary/10 to-transparent border-b border-border">
-                    <CardTitle className="text-xl font-serif font-bold text-foreground">Executive Access</CardTitle>
-                    <CardDescription className="text-[10px] uppercase tracking-widest opacity-50 mt-1">Identity verification required</CardDescription>
-                  </CardHeader>
-                  <form onSubmit={handleLogin}>
-                    <CardContent className="space-y-5 pt-6">
-                      <div className="space-y-2.5">
-                        <Label htmlFor="email" className="text-[10px] uppercase tracking-widest opacity-70 font-semibold">Corporate Email</Label>
-                        <div className="relative group">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 group-focus-within:text-primary transition-colors" />
-                          <Input
-                            id="email"
-                            type="email"
-                            placeholder="executive@imperium.com"
-                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2.5">
-                        <Label htmlFor="password" className="text-[10px] uppercase tracking-widest opacity-70 font-semibold">Security Key</Label>
-                        <div className="relative group">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 group-focus-within:text-primary transition-colors" />
-                          <Input
-                            id="password"
-                            type="password"
-                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                          />
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="pb-6 pt-2">
-                      <Button className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-black font-bold uppercase tracking-[0.15em] text-xs h-12 rounded-xl transition-all shadow-lg shadow-primary/20 gap-2" type="submit" disabled={isLoading}>
-                        {isLoading ? "Authenticating..." : <>Establish Link <ArrowRight className="size-3" /></>}
-                      </Button>
-                    </CardFooter>
-                  </form>
-                </Card>
-              </motion.div>
+            <TabsContent value="login" className="mt-0">
+              <form onSubmit={handleLogin}>
+                <CardHeader>
+                  <CardTitle>Sign In</CardTitle>
+                  <CardDescription>Enter your credentials to access your account</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="login-email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="login-email"
+                        type="email"
+                        placeholder="you@example.com"
+                        className="pl-10"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        autoComplete="email"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="login-password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="login-password"
+                        type="password"
+                        placeholder="Enter your password"
+                        className="pl-10"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        autoComplete="current-password"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit" className="w-full gap-2" disabled={isLoading}>
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+                    {isLoading ? "Signing in..." : "Sign In"}
+                  </Button>
+                </CardFooter>
+              </form>
             </TabsContent>
 
-            <TabsContent value="signup">
-              <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.2 }}>
-                <Card className="bg-gradient-to-b from-card to-card/50 border-border rounded-2xl overflow-hidden shadow-2xl backdrop-blur-lg">
-                  <CardHeader className="text-center pb-3 bg-gradient-to-r from-primary/10 to-transparent border-b border-border">
-                    <CardTitle className="text-xl font-serif font-bold text-foreground">Onboard Entity</CardTitle>
-                    <CardDescription className="text-[10px] uppercase tracking-widest opacity-50 mt-1">Register new asset manager</CardDescription>
-                  </CardHeader>
-                  <form onSubmit={handleSignUp}>
-                    <CardContent className="space-y-5 pt-6">
-                      <div className="space-y-2.5">
-                        <Label htmlFor="signup-name" className="text-[10px] uppercase tracking-widest opacity-70 font-semibold">Full Name</Label>
-                        <div className="relative group">
-                          <User className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 group-focus-within:text-primary transition-colors" />
-                          <Input
-                            id="signup-name"
-                            placeholder="Julian De Roche"
-                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
-                            value={displayName}
-                            onChange={(e) => setDisplayName(e.target.value)}
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2.5">
-                        <Label htmlFor="signup-email" className="text-[10px] uppercase tracking-widest opacity-70 font-semibold">Email Address</Label>
-                        <div className="relative group">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 group-focus-within:text-primary transition-colors" />
-                          <Input
-                            id="signup-email"
-                            type="email"
-                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2.5">
-                        <Label htmlFor="signup-password" className="text-[10px] uppercase tracking-widest opacity-70 font-semibold">Create Security Key</Label>
-                        <div className="relative group">
-                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-primary/50 group-focus-within:text-primary transition-colors" />
-                          <Input
-                            id="signup-password"
-                            type="password"
-                            className="pl-10 bg-muted/50 border-border focus:bg-muted focus:border-primary/50 transition-all rounded-xl h-11 text-sm"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                            minLength={6}
-                          />
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="pb-6 pt-2">
-                      <Button className="w-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-black font-bold uppercase tracking-[0.15em] text-xs h-12 rounded-xl transition-all shadow-lg shadow-primary/20 gap-2" type="submit" disabled={isLoading}>
-                        {isLoading ? "Provisioning..." : <>Join Network <ArrowRight className="size-3" /></>}
-                      </Button>
-                    </CardFooter>
-                  </form>
-                </Card>
-              </motion.div>
+            <TabsContent value="signup" className="mt-0">
+              <form onSubmit={handleSignUp}>
+                <CardHeader>
+                  <CardTitle>Create Account</CardTitle>
+                  <CardDescription>Register a new account to get started</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-name">Full Name</Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="signup-name"
+                        placeholder="John Doe"
+                        className="pl-10"
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="you@example.com"
+                        className="pl-10"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        autoComplete="email"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        placeholder="Min. 6 characters"
+                        className="pl-10"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={6}
+                        autoComplete="new-password"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button type="submit" className="w-full gap-2" disabled={isLoading}>
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+                    {isLoading ? "Creating account..." : "Create Account"}
+                  </Button>
+                </CardFooter>
+              </form>
             </TabsContent>
           </Tabs>
+        </Card>
 
-          <div className="mt-8 pt-6 border-t border-border space-y-3 text-center">
-            <p className="text-[9px] uppercase tracking-[0.3em] text-muted-foreground flex items-center justify-center gap-2 font-bold">
-              <ShieldCheck className="size-3 text-primary animate-pulse" /> 256-BIT ENCRYPTION ACTIVE
-            </p>
-            <div className="flex items-center justify-center gap-2 text-[9px] text-muted-foreground/70">
-              <CheckCircle2 className="size-3 text-emerald-500" />
-              <span>SSL/TLS Secured</span>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      <div className="px-4 py-6 text-center border-t border-border">
-        <p className="text-[8px] text-muted-foreground/50 uppercase tracking-[0.2em] font-bold">Powered by Zenith Enterprise Hub v1.0</p>
-      </div>
+        <p className="text-center text-xs text-muted-foreground mt-6">
+          Secure connection. Your data is encrypted.
+        </p>
+      </motion.div>
     </div>
   );
 }
