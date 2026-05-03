@@ -68,23 +68,30 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
       }
 
       if (data.user) {
+        const { error: profileError } = await supabase.from("profiles").insert({
+          id: data.user.id,
+          email,
+          display_name: displayName,
+          role: "seller",
+          points: 0,
+        });
+        if (profileError) {
+          console.error("Profile creation error:", profileError);
+        }
+
         if (data.session) {
-          const { error: profileError } = await supabase.from("profiles").insert({
-            id: data.user.id,
-            email,
-            display_name: displayName,
-            role: "seller",
-            points: 0,
-          });
-          if (profileError) {
-            console.error("Profile creation error:", profileError);
-          }
           toast.success("Account created! Welcome aboard.");
           onAuthSuccess();
         } else {
-          toast.success("Account created! You can now log in.");
-          setActiveTab("login");
-          setPassword("");
+          toast.success("Account created! Signing you in...");
+          const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+          if (loginError) {
+            toast.error("Account created but auto-login failed. Please sign in manually.");
+            setActiveTab("login");
+            setPassword("");
+          } else {
+            onAuthSuccess();
+          }
         }
       }
     } catch (error: any) {
