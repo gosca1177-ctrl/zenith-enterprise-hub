@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { User, Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { User, Mail, Lock, ArrowRight, Loader as Loader2 } from "lucide-react";
 import { motion } from "motion/react";
 
 export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
@@ -55,46 +55,36 @@ export function AuthPage({ onAuthSuccess }: { onAuthSuccess: () => void }) {
     }
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { full_name: displayName },
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+      const res = await fetch(`${supabaseUrl}/functions/v1/auth-signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${supabaseAnonKey}`,
         },
+        body: JSON.stringify({ email, password, displayName }),
       });
-      if (error) {
-        toast.error(error.message);
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.error || "Registration failed");
         return;
       }
 
-      if (data.user) {
-        const { error: profileError } = await supabase.from("profiles").insert({
-          id: data.user.id,
-          email,
-          display_name: displayName,
-          role: "seller",
-          points: 0,
-        });
-        if (profileError) {
-          console.error("Profile creation error:", profileError);
-        }
+      toast.success("Account created! Signing you in...");
 
-        if (data.session) {
-          toast.success("Account created! Welcome aboard.");
-          onAuthSuccess();
-        } else {
-          toast.success("Account created! Signing you in...");
-          const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
-          if (loginError) {
-            toast.error("Account created but auto-login failed. Please sign in manually.");
-            setActiveTab("login");
-            setPassword("");
-          } else {
-            onAuthSuccess();
-          }
-        }
+      const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+      if (loginError) {
+        toast.error("Account created but auto-login failed. Please sign in manually.");
+        setActiveTab("login");
+        setPassword("");
+      } else {
+        onAuthSuccess();
       }
-    } catch (error: any) {
+    } catch {
       toast.error("Registration failed. Please try again.");
     } finally {
       setIsLoading(false);
